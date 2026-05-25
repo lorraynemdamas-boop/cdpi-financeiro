@@ -1,0 +1,1235 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>CDPI — Sistema Financeiro</title>
+  <link rel="stylesheet" href="css/style.css?v=20260429m">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=Cinzel:wght@600;700;800;900&display=swap" rel="stylesheet">
+  <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.0/dist/chart.umd.min.js"></script>
+</head>
+<body>
+
+<!-- SIDEBAR -->
+<aside class="sidebar" id="sidebar">
+  <div class="sidebar-logo">
+    <div class="logo-icon">
+      <!-- Átomo CDPI - logo oficial -->
+      <svg width="38" height="38" viewBox="0 0 40 40" fill="none">
+        <ellipse cx="20" cy="20" rx="18" ry="7.5" stroke="#ffffff" stroke-width="2.2" transform="rotate(0 20 20)"/>
+        <ellipse cx="20" cy="20" rx="18" ry="7.5" stroke="#ffffff" stroke-width="2.2" transform="rotate(60 20 20)"/>
+        <ellipse cx="20" cy="20" rx="18" ry="7.5" stroke="#ffffff" stroke-width="2.2" transform="rotate(120 20 20)"/>
+        <circle cx="20" cy="20" r="3" fill="#ffffff"/>
+      </svg>
+    </div>
+    <div class="logo-text logo-text-official">
+      <span class="logo-cdpi">CDPI</span>
+      <span class="logo-pharma"><span class="logo-bar"></span>PHARMA<span class="logo-bar"></span></span>
+    </div>
+  </div>
+
+  <nav class="sidebar-nav">
+    <div class="nav-section-label">Principal</div>
+    <a class="nav-item active" data-page="dashboard" onclick="navigate('dashboard')">
+      <svg class="nav-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="3" width="7" height="7"/><rect x="14" y="3" width="7" height="7"/><rect x="3" y="14" width="7" height="7"/><rect x="14" y="14" width="7" height="7"/></svg>
+      Dashboard
+    </a>
+    <a class="nav-item" data-page="pagar" onclick="navigate('pagar')">
+      <svg class="nav-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="23 6 13.5 15.5 8.5 10.5 1 18"/><polyline points="17 6 23 6 23 12"/></svg>
+      Projeção a Pagar e Receber
+    </a>
+
+    <div class="nav-section-label">Análise</div>
+    <a class="nav-item" data-page="fluxo" onclick="navigate('fluxo')">
+      <svg class="nav-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="22 12 18 12 15 21 9 3 6 12 2 12"/></svg>
+      Fluxo de Caixa
+    </a>
+    <a class="nav-item" data-page="empresa" onclick="navigate('empresa')">
+      <svg class="nav-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="2" y="7" width="20" height="14"/><path d="M16 21V5a2 2 0 0 0-2-2h-4a2 2 0 0 0-2 2v16"/></svg>
+      Por Empresa
+    </a>
+    <a class="nav-item" data-page="projetado" onclick="navigate('projetado')">
+      <svg class="nav-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="18" y1="20" x2="18" y2="10"/><line x1="12" y1="20" x2="12" y2="4"/><line x1="6" y1="20" x2="6" y2="14"/></svg>
+      Projetado × Realizado
+    </a>
+    <a class="nav-item" data-page="projecao-diaria" onclick="navigate('projecao-diaria')">
+      <svg class="nav-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="4" width="18" height="18" rx="2"/><line x1="16" y1="2" x2="16" y2="6"/><line x1="8" y1="2" x2="8" y2="6"/><line x1="3" y1="10" x2="21" y2="10"/><line x1="8" y1="14" x2="8" y2="14"/><line x1="12" y1="14" x2="12" y2="14"/><line x1="16" y1="14" x2="16" y2="14"/></svg>
+      Projeção Diária
+    </a>
+
+    <a class="nav-item" data-page="boletim" onclick="navigate('boletim')">
+      <svg class="nav-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="4" width="18" height="18" rx="2"/><line x1="16" y1="2" x2="16" y2="6"/><line x1="8" y1="2" x2="8" y2="6"/><line x1="3" y1="10" x2="21" y2="10"/><line x1="8" y1="14" x2="16" y2="14"/><line x1="8" y1="18" x2="12" y2="18"/></svg>
+      Boletim de Caixa
+    </a>
+
+    <div class="nav-section-label">Configuração</div>
+    <a class="nav-item" data-page="parametros" onclick="navigate('parametros')">
+      <svg class="nav-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="3"/><path d="M19.07 4.93A10 10 0 1 0 4.93 19.07 10 10 0 1 0 19.07 4.93"/></svg>
+      Parâmetros
+    </a>
+  </nav>
+
+  <div class="sidebar-footer">
+    <div class="user-info">
+      <div class="user-avatar">
+        <svg width="28" height="28" viewBox="0 0 40 40" fill="none">
+          <ellipse cx="20" cy="20" rx="18" ry="7.5" stroke="#ffffff" stroke-width="2.2" transform="rotate(0 20 20)"/>
+          <ellipse cx="20" cy="20" rx="18" ry="7.5" stroke="#ffffff" stroke-width="2.2" transform="rotate(60 20 20)"/>
+          <ellipse cx="20" cy="20" rx="18" ry="7.5" stroke="#ffffff" stroke-width="2.2" transform="rotate(120 20 20)"/>
+          <circle cx="20" cy="20" r="3" fill="#ffffff"/>
+        </svg>
+      </div>
+      <div class="user-details">
+        <span class="user-name">Sistema Financeiro</span>
+      </div>
+    </div>
+  </div>
+</aside>
+
+<!-- MAIN -->
+<main class="main-content" id="main">
+
+  <!-- TOP BAR -->
+  <!-- topbar removida para maximizar espaço de conteúdo -->
+  <div style="display:none">
+    <input id="global-search">
+    <span id="notif-count"></span>
+    <span id="current-page-title"></span>
+  </div>
+
+  <!-- PAGES -->
+
+  <!-- ===== DASHBOARD ===== -->
+  <section class="page active" id="page-dashboard">
+
+    <!-- Header bar -->
+    <div class="dash-page-header">
+      <div class="pag2-header-left">
+        <div class="pag2-hdr-icon">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" width="20" height="20">
+            <rect x="3" y="3" width="7" height="7"/><rect x="14" y="3" width="7" height="7"/>
+            <rect x="3" y="14" width="7" height="7"/><rect x="14" y="14" width="7" height="7"/>
+          </svg>
+        </div>
+        <div>
+          <h1 class="pag2-title">Dashboard Executivo</h1>
+          <p class="pag2-sub">Abril 2026 · Visão consolidada</p>
+        </div>
+      </div>
+      <div class="pag2-header-right">
+        <div class="ms-widget" id="msw-dash-empresa-filter"><button class="ms-trigger" type="button" onclick="msToggle('dash-empresa-filter')"><span class="ms-label" id="mslbl-dash-empresa-filter">Todas as Empresas</span><svg class="ms-chevron" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" width="12" height="12"><polyline points="6 9 12 15 18 9"/></svg></button><div class="ms-panel" id="mspanel-dash-empresa-filter"><label class="ms-opt ms-all-opt"><input type="checkbox" class="ms-all-cb" checked onchange="msSelectAll('dash-empresa-filter')"><span>Todas as Empresas</span></label><div class="ms-divider"></div><label class="ms-opt"><input type="checkbox" class="ms-cb" value="CDPI PHARMA" onchange="msChange('dash-empresa-filter')"><span>CDPI PHARMA</span></label><label class="ms-opt"><input type="checkbox" class="ms-cb" value="FACULDADE CDPI" onchange="msChange('dash-empresa-filter')"><span>FACULDADE CDPI</span></label><label class="ms-opt"><input type="checkbox" class="ms-cb" value="CONSULTORES" onchange="msChange('dash-empresa-filter')"><span>CONSULTORES</span></label><label class="ms-opt"><input type="checkbox" class="ms-cb" value="EKOS" onchange="msChange('dash-empresa-filter')"><span>EKOS</span></label><label class="ms-opt"><input type="checkbox" class="ms-cb" value="ESTABILIDADE" onchange="msChange('dash-empresa-filter')"><span>ESTABILIDADE</span></label><label class="ms-opt"><input type="checkbox" class="ms-cb" value="QUIRON" onchange="msChange('dash-empresa-filter')"><span>QUIRON</span></label></div></div>
+        <button class="btn-primary" onclick="exportReport()">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" width="16" height="16"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="7 10 12 15 17 10"/><line x1="12" y1="15" x2="12" y2="3"/></svg>
+          Exportar
+        </button>
+      </div>
+    </div>
+
+    <!-- Projeção do Mês -->
+    <div id="proj-mes-card"></div>
+
+    <!-- KPI Cards principais (4 colunas) -->
+    <div class="dash-kpi-grid">
+
+      <div class="dash-kpi-card dash-kpi-blue">
+        <div class="dash-kpi-left">
+          <div class="dash-kpi-label">Total a Receber</div>
+          <div class="dash-kpi-value" id="kpi-receber">R$ 0</div>
+          <div class="dash-kpi-meta" id="kpi-receber-count">— lançamentos</div>
+        </div>
+        <div class="dash-kpi-ico dash-kpi-ico-blue">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" width="22" height="22"><polyline points="23 6 13.5 15.5 8.5 10.5 1 18"/><polyline points="17 18 23 18 23 12"/></svg>
+        </div>
+      </div>
+
+      <div class="dash-kpi-card dash-kpi-red">
+        <div class="dash-kpi-left">
+          <div class="dash-kpi-label">Total a Pagar</div>
+          <div class="dash-kpi-value" id="kpi-pagar">R$ 0</div>
+          <div class="dash-kpi-meta" id="kpi-pagar-count">— lançamentos</div>
+        </div>
+        <div class="dash-kpi-ico dash-kpi-ico-red">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" width="22" height="22"><polyline points="23 18 13.5 8.5 8.5 13.5 1 6"/><polyline points="17 6 23 6 23 12"/></svg>
+        </div>
+      </div>
+
+      <div class="dash-kpi-card dash-kpi-navy">
+        <div class="dash-kpi-left">
+          <div class="dash-kpi-label">Saldo Projetado</div>
+          <div class="dash-kpi-value" id="kpi-saldo-proj">R$ 0</div>
+          <div class="dash-kpi-meta" id="kpi-saldo-proj-label">—</div>
+        </div>
+        <div class="dash-kpi-ico dash-kpi-ico-navy">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" width="22" height="22"><rect x="2" y="5" width="20" height="14" rx="2"/><line x1="2" y1="10" x2="22" y2="10"/></svg>
+        </div>
+      </div>
+
+      <div class="dash-kpi-card dash-kpi-green">
+        <div class="dash-kpi-left">
+          <div class="dash-kpi-label">Saldo Realizado</div>
+          <div class="dash-kpi-value" id="kpi-saldo-real">R$ 0</div>
+          <div class="dash-kpi-meta" id="kpi-saldo-real-label">—</div>
+        </div>
+        <div class="dash-kpi-ico dash-kpi-ico-green">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" width="22" height="22"><polyline points="20 6 9 17 4 12"/></svg>
+        </div>
+      </div>
+
+    </div>
+
+    <!-- Strip de métricas secundárias -->
+    <div class="dash-strip">
+      <div class="dash-strip-item">
+        <span class="dash-strip-label">Vencidas em Atraso</span>
+        <span class="dash-strip-val" style="color:var(--danger)" id="kpi-vencidas">0</span>
+        <span class="dash-strip-amount" id="kpi-vencidas-val">R$ 0</span>
+      </div>
+      <div class="dash-strip-item">
+        <span class="dash-strip-label">A Vencer (7 dias)</span>
+        <span class="dash-strip-val" style="color:#d97706" id="kpi-a-vencer">0</span>
+        <span class="dash-strip-amount" id="kpi-a-vencer-val">R$ 0</span>
+      </div>
+      <div class="dash-strip-item">
+        <span class="dash-strip-label">Recebido no Mês</span>
+        <span class="dash-strip-val" style="color:var(--success)" id="kpi-recebido-mes">R$ 0</span>
+        <span class="dash-strip-amount" id="kpi-recebido-count">— registros</span>
+      </div>
+      <div class="dash-strip-item">
+        <span class="dash-strip-label">Pago no Mês</span>
+        <span class="dash-strip-val" style="color:var(--cdpi-navy)" id="kpi-pago-mes">R$ 0</span>
+        <span class="dash-strip-amount" id="kpi-pago-count">— registros</span>
+      </div>
+    </div>
+
+    <!-- Gráficos linha 1 -->
+    <div class="dash-charts-row dash-charts-2">
+      <div class="card chart-card">
+        <div class="chart-header">
+          <h3 class="chart-title">Receitas × Despesas</h3>
+          <span class="chart-sub">Distribuição por grupo de conta</span>
+        </div>
+        <div class="chart-wrap" style="height:280px"><canvas id="chart-rec-desp"></canvas></div>
+      </div>
+      <div class="card chart-card">
+        <div class="chart-header">
+          <h3 class="chart-title">Fluxo de Caixa — Abril 2026</h3>
+          <span class="chart-sub">Evolução diária do saldo</span>
+        </div>
+        <div class="chart-wrap" style="height:280px"><canvas id="chart-fluxo"></canvas></div>
+      </div>
+    </div>
+
+    <!-- Gráficos linha 2 -->
+    <div class="dash-charts-row dash-charts-3">
+      <div class="card chart-card">
+        <div class="chart-header">
+          <h3 class="chart-title">Status dos Lançamentos</h3>
+          <span class="chart-sub">Visão geral do portfólio</span>
+        </div>
+        <div class="chart-wrap" style="height:240px"><canvas id="chart-status"></canvas></div>
+      </div>
+      <div class="card chart-card">
+        <div class="chart-header">
+          <h3 class="chart-title">Distribuição por Empresa</h3>
+          <span class="chart-sub">Receita e despesa consolidadas</span>
+        </div>
+        <div class="chart-wrap" style="height:240px"><canvas id="chart-empresa"></canvas></div>
+      </div>
+      <div class="card chart-card">
+        <div class="chart-header">
+          <h3 class="chart-title">Maiores Despesas</h3>
+          <span class="chart-sub">Top grupos de conta</span>
+        </div>
+        <div class="chart-wrap" style="height:240px"><canvas id="chart-top-desp"></canvas></div>
+      </div>
+    </div>
+
+    <!-- Painel de Alertas -->
+    <div class="card dash-alert-card">
+      <div class="dash-alert-header">
+        <div class="dash-alert-title-wrap">
+          <div class="dash-alert-icon">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" width="18" height="18"><path d="M10.29 3.86L1.82 18a2 2 0 0 0 1.71 3h16.94a2 2 0 0 0 1.71-3L13.71 3.86a2 2 0 0 0-3.42 0z"/><line x1="12" y1="9" x2="12" y2="13"/><line x1="12" y1="17" x2="12.01" y2="17"/></svg>
+          </div>
+          <div>
+            <h3 class="chart-title" style="margin:0">Alertas e Pendências</h3>
+            <span class="chart-sub">Atenção imediata necessária</span>
+          </div>
+        </div>
+      </div>
+      <div id="alert-panel" class="dash-alert-list"></div>
+    </div>
+
+  </section>
+
+  <!-- ===== CONTAS A RECEBER ===== -->
+  <section class="page" id="page-receber">
+
+    <!-- ── HEADER ─────────────────────────────────────────── -->
+    <div class="pag2-header">
+      <div class="pag2-header-left">
+        <div class="pag2-hdr-icon">
+          <svg viewBox="0 0 24 24" fill="none" stroke="white" stroke-width="2" width="26" height="26"><polyline points="23 6 13.5 15.5 8.5 10.5 1 18"/><polyline points="17 6 23 6 23 12"/></svg>
+        </div>
+        <div>
+          <h1 class="pag2-title">Contas a Receber</h1>
+          <p class="pag2-sub">Gestão de recebíveis e títulos financeiros</p>
+        </div>
+      </div>
+      <div class="pag2-header-right">
+        <div class="ms-widget" id="msw-rec-empresa">
+          <button class="ms-trigger pag2-ms-hdr" type="button" onclick="msToggle('rec-empresa')">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" width="13" height="13"><path d="M3 9l9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"/><polyline points="9 22 9 12 15 12 15 22"/></svg>
+            <span class="ms-label" id="mslbl-rec-empresa">Todas as Empresas</span>
+            <svg class="ms-chevron" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" width="12" height="12"><polyline points="6 9 12 15 18 9"/></svg>
+          </button>
+          <div class="ms-panel" id="mspanel-rec-empresa">
+            <label class="ms-opt ms-all-opt"><input type="checkbox" class="ms-all-cb" checked onchange="msSelectAll('rec-empresa')"><span>Todas as Empresas</span></label>
+            <div class="ms-divider"></div>
+            <label class="ms-opt"><input type="checkbox" class="ms-cb" value="CDPI PHARMA" onchange="msChange('rec-empresa')"><span>CDPI PHARMA</span></label>
+            <label class="ms-opt"><input type="checkbox" class="ms-cb" value="FACULDADE CDPI" onchange="msChange('rec-empresa')"><span>FACULDADE CDPI</span></label>
+            <label class="ms-opt"><input type="checkbox" class="ms-cb" value="CONSULTORES" onchange="msChange('rec-empresa')"><span>CONSULTORES</span></label>
+            <label class="ms-opt"><input type="checkbox" class="ms-cb" value="EKOS" onchange="msChange('rec-empresa')"><span>EKOS</span></label>
+            <label class="ms-opt"><input type="checkbox" class="ms-cb" value="ESTABILIDADE" onchange="msChange('rec-empresa')"><span>ESTABILIDADE</span></label>
+            <label class="ms-opt"><input type="checkbox" class="ms-cb" value="QUIRON" onchange="msChange('rec-empresa')"><span>QUIRON</span></label>
+          </div>
+        </div>
+        <button class="pag2-btn-sec" onclick="exportCSV('receber')">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" width="14" height="14"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="7 10 12 15 17 10"/><line x1="12" y1="15" x2="12" y2="3"/></svg>
+          Exportar CSV
+        </button>
+        <button class="pag2-btn-pri" onclick="openModal('receber')">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" width="14" height="14"><line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/></svg>
+          Novo Recebível
+        </button>
+      </div>
+    </div>
+
+    <!-- ── KPI CARDS ─────────────────────────────────────── -->
+    <div class="pag2-kpi-grid" id="receber-kpi-grid"></div>
+
+    <!-- Filtros ocultos (compatibilidade JS) -->
+    <div style="display:none">
+      <select id="rec-banco"></select>
+    </div>
+
+    <!-- ── FILTER CARD ───────────────────────────────────── -->
+    <div class="pag2-filter-card">
+      <div class="pag2-filter-row">
+        <div class="pag2-filter-item">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" width="13" height="13" class="pag2-filter-ico"><circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/></svg>
+          <span class="pag2-filter-lbl">Status</span>
+          <select id="rec-status" onchange="applyFilters('receber');renderReceberKpis()">
+            <option value="">Todos</option>
+            <option value="Em Aberto">Em Aberto</option>
+            <option value="Recebido">Recebido</option>
+            <option value="EM ATRASO">Em Atraso</option>
+          </select>
+        </div>
+        <div class="pag2-filter-item">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" width="13" height="13" class="pag2-filter-ico"><line x1="8" y1="6" x2="21" y2="6"/><line x1="8" y1="12" x2="21" y2="12"/><line x1="8" y1="18" x2="21" y2="18"/><line x1="3" y1="6" x2="3.01" y2="6"/></svg>
+          <span class="pag2-filter-lbl">Grupo</span>
+          <select id="rec-grupo" onchange="applyFilters('receber');renderReceberKpis()">
+            <option value="">Todos</option>
+            <option>Receita Operacionais</option>
+            <option>Serviços de Orientação Profissional</option>
+            <option>Investimentos</option>
+          </select>
+        </div>
+        <div class="pag2-filter-item">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" width="13" height="13" class="pag2-filter-ico"><rect x="2" y="5" width="20" height="14" rx="2"/><line x1="2" y1="10" x2="22" y2="10"/></svg>
+          <span class="pag2-filter-lbl">Forma</span>
+          <select id="rec-forma" onchange="applyFilters('receber');renderReceberKpis()">
+            <option value="">Todas</option>
+            <option>Boleto Automático</option>
+            <option>Boleto</option>
+            <option>Transferência</option>
+            <option>Cartão de Crédito</option>
+            <option>Cartão de Crédito (Recorrente)</option>
+          </select>
+        </div>
+        <div class="pag2-search-wrap">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" width="13" height="13" style="color:var(--text-3);flex-shrink:0"><circle cx="11" cy="11" r="8"/><line x1="21" y1="21" x2="16.65" y2="16.65"/></svg>
+          <input type="text" id="rec-search" placeholder="Buscar cliente, descrição..." oninput="applyFilters('receber');renderReceberKpis()">
+        </div>
+        <button class="pag2-clear-btn" onclick="clearFilters('receber');renderReceberKpis()">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" width="13" height="13"><polyline points="1 4 1 10 7 10"/><path d="M3.51 15a9 9 0 1 0 .49-3.75"/></svg>
+          Limpar
+        </button>
+      </div>
+    </div>
+
+    <!-- Summary strip oculto (mantido para compatibilidade JS) -->
+    <div class="summary-strip" id="rec-summary" style="display:none"></div>
+
+    <!-- ── TABELA DE LANÇAMENTOS ──────────────────────────── -->
+    <div class="pag2-table-card table-card">
+      <div class="table-wrap">
+        <table class="data-table" id="rec-table">
+          <thead>
+            <tr>
+              <th onclick="sortTable('receber','lancamento')">Lançamento <span class="sort-icon">↕</span></th>
+              <th>Descrição</th>
+              <th>Cliente / Pessoa</th>
+              <th>Conta</th>
+              <th>Banco</th>
+              <th>Forma</th>
+              <th onclick="sortTable('receber','receita')" class="text-right">Valor <span class="sort-icon">↕</span></th>
+              <th onclick="sortTable('receber','vencimento')">Vencimento <span class="sort-icon">↕</span></th>
+              <th>Recebimento</th>
+              <th>Empresa</th>
+              <th>Status</th>
+              <th>Grupo</th>
+              <th class="col-actions">Ações</th>
+            </tr>
+          </thead>
+          <tbody id="rec-tbody"></tbody>
+        </table>
+      </div>
+      <div class="pagination" id="rec-pagination"></div>
+    </div>
+
+  </section>
+
+  <!-- ===== CONTAS A PAGAR ===== -->
+  <section class="page" id="page-pagar">
+
+    <!-- ── HEADER ─────────────────────────────────────────── -->
+    <div class="pag2-header">
+      <div class="pag2-header-left">
+        <div class="pag2-hdr-icon">
+          <svg viewBox="0 0 24 24" fill="none" stroke="white" stroke-width="2" width="26" height="26"><rect x="2" y="5" width="20" height="14" rx="2"/><line x1="2" y1="10" x2="22" y2="10"/><line x1="6" y1="15" x2="10" y2="15"/></svg>
+        </div>
+        <div>
+          <h1 class="pag2-title">Contas a Pagar</h1>
+          <p class="pag2-sub">Gestão de despesas e obrigações financeiras</p>
+        </div>
+      </div>
+      <div class="pag2-header-right">
+        <div class="ms-widget" id="msw-pag-empresa">
+          <button class="ms-trigger pag2-ms-hdr" type="button" onclick="msToggle('pag-empresa')">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" width="13" height="13"><path d="M3 9l9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"/><polyline points="9 22 9 12 15 12 15 22"/></svg>
+            <span class="ms-label" id="mslbl-pag-empresa">Todas as Empresas</span>
+            <svg class="ms-chevron" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" width="12" height="12"><polyline points="6 9 12 15 18 9"/></svg>
+          </button>
+          <div class="ms-panel" id="mspanel-pag-empresa">
+            <label class="ms-opt ms-all-opt"><input type="checkbox" class="ms-all-cb" checked onchange="msSelectAll('pag-empresa')"><span>Todas as Empresas</span></label>
+            <div class="ms-divider"></div>
+            <label class="ms-opt"><input type="checkbox" class="ms-cb" value="CDPI PHARMA" onchange="msChange('pag-empresa')"><span>CDPI PHARMA</span></label>
+            <label class="ms-opt"><input type="checkbox" class="ms-cb" value="FACULDADE CDPI" onchange="msChange('pag-empresa')"><span>FACULDADE CDPI</span></label>
+            <label class="ms-opt"><input type="checkbox" class="ms-cb" value="CONSULTORES" onchange="msChange('pag-empresa')"><span>CONSULTORES</span></label>
+            <label class="ms-opt"><input type="checkbox" class="ms-cb" value="EKOS" onchange="msChange('pag-empresa')"><span>EKOS</span></label>
+            <label class="ms-opt"><input type="checkbox" class="ms-cb" value="ESTABILIDADE" onchange="msChange('pag-empresa')"><span>ESTABILIDADE</span></label>
+            <label class="ms-opt"><input type="checkbox" class="ms-cb" value="QUIRON" onchange="msChange('pag-empresa')"><span>QUIRON</span></label>
+          </div>
+        </div>
+        <button class="pag2-btn-sec" onclick="exportCSV('pagar')">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" width="14" height="14"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="7 10 12 15 17 10"/><line x1="12" y1="15" x2="12" y2="3"/></svg>
+          Exportar CSV
+        </button>
+        <button class="pag2-btn-pri" onclick="openModal('pagar')">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" width="14" height="14"><line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/></svg>
+          Nova Despesa
+        </button>
+      </div>
+    </div>
+
+    <!-- ── KPI CARDS ─────────────────────────────────────── -->
+    <div class="pag2-kpi-grid" id="pagar-kpi-grid"></div>
+
+    <!-- ── ABAS ───────────────────────────────────────────── -->
+    <div class="pag2-tabs">
+      <button class="pag2-tab" id="btn-view-pivot" onclick="setPagarView('pivot')">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" width="14" height="14"><rect x="3" y="3" width="18" height="18" rx="2"/><line x1="3" y1="9" x2="21" y2="9"/><line x1="3" y1="15" x2="21" y2="15"/><line x1="9" y1="3" x2="9" y2="21"/></svg>
+        Tabela Dinâmica
+      </button>
+      <button class="pag2-tab active" id="btn-view-lista" onclick="setPagarView('lista')">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" width="14" height="14"><line x1="8" y1="6" x2="21" y2="6"/><line x1="8" y1="12" x2="21" y2="12"/><line x1="8" y1="18" x2="21" y2="18"/><line x1="3" y1="6" x2="3.01" y2="6"/><line x1="3" y1="12" x2="3.01" y2="12"/><line x1="3" y1="18" x2="3.01" y2="18"/></svg>
+        Lançamentos
+      </button>
+    </div>
+
+    <!-- ── FILTER CARD (Lançamentos) ─────────────────────── -->
+    <div class="pag2-filter-card" id="pag-lista-filters">
+      <div class="pag2-filter-row">
+        <div class="pag2-filter-item">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" width="13" height="13" class="pag2-filter-ico"><circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/></svg>
+          <span class="pag2-filter-lbl">Status</span>
+          <select id="pag-status" onchange="applyFilters('pagar');renderPagarKpis()">
+            <option value="">Todos</option>
+            <option value="Em Aberto">Em Aberto</option>
+            <option value="Pago">Pago</option>
+            <option value="EM ATRASO">Em Atraso</option>
+          </select>
+        </div>
+        <div class="pag2-filter-item">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" width="13" height="13" class="pag2-filter-ico"><line x1="8" y1="6" x2="21" y2="6"/><line x1="8" y1="12" x2="21" y2="12"/><line x1="8" y1="18" x2="21" y2="18"/><line x1="3" y1="6" x2="3.01" y2="6"/></svg>
+          <span class="pag2-filter-lbl">Grupo</span>
+          <select id="pag-grupo" onchange="applyFilters('pagar');renderPagarKpis()">
+            <option value="">Todos</option>
+            <option>Despesas Operacionais</option>
+            <option>Despesas Administrativas</option>
+            <option>Despesas com Viagens</option>
+            <option>Eventos / Feiras / Exposições</option>
+            <option>Impostos e Taxas</option>
+            <option>Folha de Pagamento</option>
+          </select>
+        </div>
+        <div class="pag2-filter-item">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" width="13" height="13" class="pag2-filter-ico"><rect x="2" y="5" width="20" height="14" rx="2"/><line x1="2" y1="10" x2="22" y2="10"/></svg>
+          <span class="pag2-filter-lbl">Banco</span>
+          <select id="pag-banco" onchange="applyFilters('pagar');renderPagarKpis()">
+            <option value="">Todos</option>
+            <option>Itaú</option>
+            <option>Bradesco</option>
+            <option>Santander</option>
+            <option>Banco do Brasil</option>
+            <option>Caixa</option>
+          </select>
+        </div>
+        <div class="pag2-search-wrap">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" width="13" height="13" style="color:var(--text-3);flex-shrink:0"><circle cx="11" cy="11" r="8"/><line x1="21" y1="21" x2="16.65" y2="16.65"/></svg>
+          <input type="text" id="pag-search" placeholder="Buscar fornecedor, descrição..." oninput="applyFilters('pagar');renderPagarKpis()">
+        </div>
+        <button class="pag2-clear-btn" onclick="clearFilters('pagar');renderPagarKpis()">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" width="13" height="13"><polyline points="1 4 1 10 7 10"/><path d="M3.51 15a9 9 0 1 0 .49-3.75"/></svg>
+          Limpar
+        </button>
+      </div>
+    </div>
+
+    <div class="summary-strip" id="pag-summary" style="display:none"></div>
+
+    <!-- ── TABELA DE LANÇAMENTOS ──────────────────────────── -->
+    <div class="pag2-table-card table-card">
+      <div class="table-wrap">
+        <table class="data-table" id="pag-table">
+          <thead>
+            <tr>
+              <th><span class="th-label" onclick="sortTable('pagar','lancamento')">Lançamento <span class="sort-icon">↕</span></span></th>
+              <th><span class="th-label">Descrição</span><button class="th-filter-btn" data-field="descricao" onclick="openColFilter(event,'pagar','descricao')" title="Filtrar">▾</button></th>
+              <th><span class="th-label">Fornecedor / Pessoa</span><button class="th-filter-btn" data-field="pessoa" onclick="openColFilter(event,'pagar','pessoa')" title="Filtrar">▾</button></th>
+              <th><span class="th-label">Conta</span><button class="th-filter-btn" data-field="conta" onclick="openColFilter(event,'pagar','conta')" title="Filtrar">▾</button></th>
+              <th><span class="th-label">Banco</span><button class="th-filter-btn" data-field="banco" onclick="openColFilter(event,'pagar','banco')" title="Filtrar">▾</button></th>
+              <th><span class="th-label">Forma</span><button class="th-filter-btn" data-field="forma" onclick="openColFilter(event,'pagar','forma')" title="Filtrar">▾</button></th>
+              <th class="text-right"><span class="th-label" onclick="sortTable('pagar','despesa')">Valor <span class="sort-icon">↕</span></span></th>
+              <th><span class="th-label" onclick="sortTable('pagar','vencimento')">Vencimento <span class="sort-icon">↕</span></span></th>
+              <th><span class="th-label">Pagamento</span></th>
+              <th><span class="th-label">Empresa</span><button class="th-filter-btn" data-field="empresa" onclick="openColFilter(event,'pagar','empresa')" title="Filtrar">▾</button></th>
+              <th><span class="th-label">Status</span><button class="th-filter-btn" data-field="status" onclick="openColFilter(event,'pagar','status')" title="Filtrar">▾</button></th>
+              <th><span class="th-label">Grupo</span><button class="th-filter-btn" data-field="grupoConta" onclick="openColFilter(event,'pagar','grupoConta')" title="Filtrar">▾</button></th>
+              <th class="col-actions">Ações</th>
+            </tr>
+          </thead>
+          <tbody id="pag-tbody"></tbody>
+        </table>
+      </div>
+      <div class="pagination" id="pag-pagination"></div>
+    </div>
+
+    <!-- ── TABELA DINÂMICA (NÃO ALTERAR ESTRUTURA INTERNA) ── -->
+    <div id="pivot-view" style="display:none">
+
+      <!-- Filtros pivot -->
+      <div class="pag2-pivot-filter-card">
+        <!-- Grupo esquerdo: filtros -->
+        <div class="pivot-filter-left">
+          <div class="pill-dropdown">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" width="13" height="13" style="color:var(--text-3)"><line x1="8" y1="6" x2="21" y2="6"/><line x1="8" y1="12" x2="21" y2="12"/><line x1="8" y1="18" x2="21" y2="18"/><line x1="3" y1="6" x2="3.01" y2="6"/></svg>
+            <span class="pill-label">Grupo:</span>
+            <select class="pill-select" id="pivot-grupo" onchange="updatePivotContaOptions();renderPivot()" style="max-width:200px">
+              <option value="">Todos</option>
+              <option>Custo do Serviço Vendido</option>
+              <option>Custo do Serviço Vendido ( Consultoria / In-Company )</option>
+              <option>Despesas Administrativas</option>
+              <option>Despesas Comerciais</option>
+              <option>Despesas com Pessoal</option>
+              <option>Despesas Financeiras</option>
+              <option>Despesas Marketing</option>
+              <option>Despesas Tributárias</option>
+              <option>Empréstimos e Financiamentos</option>
+              <option>Investimentos</option>
+              <option>Sócios</option>
+            </select>
+            <svg class="pill-chevron" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" width="11" height="11"><polyline points="6 9 12 15 18 9"/></svg>
+          </div>
+          <div class="pill-dropdown">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" width="13" height="13" style="color:var(--text-3)"><circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/></svg>
+            <span class="pill-label">Status:</span>
+            <select class="pill-select" id="pivot-status" onchange="renderPivot()">
+              <option value="">Todos</option>
+              <option value="Em Aberto">Em Aberto</option>
+              <option value="Recebido">Pago</option>
+              <option value="EM ATRASO">Em Atraso</option>
+            </select>
+            <svg class="pill-chevron" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" width="11" height="11"><polyline points="6 9 12 15 18 9"/></svg>
+          </div>
+          <!-- hidden selects para compatibilidade JS -->
+          <select id="pivot-conta" style="display:none"></select>
+          <select id="pivot-mes"   style="display:none"></select>
+          <div style="display:none" id="msw-pivot-empresa">
+            <button type="button" onclick="msToggle('pivot-empresa')"><span id="mslbl-pivot-empresa"></span></button>
+            <div id="mspanel-pivot-empresa">
+              <input type="checkbox" class="ms-all-cb" checked onchange="msSelectAll('pivot-empresa')">
+              <input type="checkbox" class="ms-cb" value="CDPI PHARMA"    onchange="msChange('pivot-empresa')">
+              <input type="checkbox" class="ms-cb" value="FACULDADE CDPI" onchange="msChange('pivot-empresa')">
+              <input type="checkbox" class="ms-cb" value="CONSULTORES"    onchange="msChange('pivot-empresa')">
+              <input type="checkbox" class="ms-cb" value="EKOS"           onchange="msChange('pivot-empresa')">
+              <input type="checkbox" class="ms-cb" value="ESTABILIDADE"   onchange="msChange('pivot-empresa')">
+              <input type="checkbox" class="ms-cb" value="QUIRON"         onchange="msChange('pivot-empresa')">
+            </div>
+          </div>
+        </div>
+        <!-- Grupo direito: ações -->
+        <div class="pivot-filter-right">
+          <button class="pag2-pivot-btn" onclick="expandAllPivot()">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" width="13" height="13"><polyline points="15 3 21 3 21 9"/><polyline points="9 21 3 21 3 15"/><line x1="21" y1="3" x2="14" y2="10"/><line x1="3" y1="21" x2="10" y2="14"/></svg>
+            Expandir Tudo
+          </button>
+          <button class="pag2-pivot-btn" onclick="collapseAllPivot()">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" width="13" height="13"><polyline points="4 14 10 14 10 20"/><polyline points="20 10 14 10 14 4"/><line x1="10" y1="14" x2="21" y2="3"/><line x1="3" y1="21" x2="14" y2="10"/></svg>
+            Recolher
+          </button>
+          <button class="pag2-clear-btn" onclick="clearPivotFilters()">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" width="13" height="13"><polyline points="1 4 1 10 7 10"/><path d="M3.51 15a9 9 0 1 0 .49-3.75"/></svg>
+            Limpar
+          </button>
+        </div>
+      </div>
+
+      <!-- ── TABELA DINÂMICA — NÃO ALTERAR ── -->
+      <div id="pivot-table-container" style="border-radius:12px;overflow:auto;border:1px solid var(--border);box-shadow:0 1px 4px rgba(0,0,0,.06);max-height:60vh">
+        <table class="pivot-table" id="pivot-table">
+          <thead id="pivot-thead"></thead>
+          <tbody id="pivot-tbody"></tbody>
+          <tfoot id="pivot-tfoot"></tfoot>
+        </table>
+      </div>
+
+      <!-- ── OVERLAY FULLSCREEN ── -->
+      <div id="pivot-overlay" onclick="if(event.target===this)closePivotOverlay()">
+        <!-- Cabeçalho do overlay -->
+        <div class="pivot-overlay-hdr">
+          <div style="display:flex;align-items:center;gap:12px">
+            <svg viewBox="0 0 24 24" fill="none" stroke="white" stroke-width="2" width="20" height="20"><rect x="3" y="3" width="18" height="18" rx="2"/><line x1="3" y1="9" x2="21" y2="9"/><line x1="3" y1="15" x2="21" y2="15"/><line x1="9" y1="3" x2="9" y2="21"/></svg>
+            <span class="pivot-overlay-title">Tabela Dinâmica — Contas a Pagar</span>
+          </div>
+          <div style="display:flex;align-items:center;gap:8px">
+            <button class="pivot-overlay-btn-sec" onclick="collapseAllPivot()">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" width="13" height="13"><polyline points="4 14 10 14 10 20"/><polyline points="20 10 14 10 14 4"/><line x1="10" y1="14" x2="21" y2="3"/><line x1="3" y1="21" x2="14" y2="10"/></svg>
+              Recolher Tudo
+            </button>
+            <button class="pivot-overlay-close" onclick="closePivotOverlay()">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" width="15" height="15"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg>
+              Fechar
+            </button>
+          </div>
+        </div>
+        <!-- Filtros dentro do overlay -->
+        <div class="pivot-overlay-filters">
+          <div class="pill-dropdown" style="background:rgba(255,255,255,.1);border-color:rgba(255,255,255,.2)">
+            <svg viewBox="0 0 24 24" fill="none" stroke="rgba(255,255,255,.7)" stroke-width="2" width="13" height="13"><line x1="8" y1="6" x2="21" y2="6"/><line x1="8" y1="12" x2="21" y2="12"/><line x1="8" y1="18" x2="21" y2="18"/><line x1="3" y1="6" x2="3.01" y2="6"/></svg>
+            <span class="pill-label" style="color:rgba(255,255,255,.6)">Grupo:</span>
+            <select class="pill-select" style="color:#fff" onchange="document.getElementById('pivot-grupo').value=this.value;updatePivotContaOptions();renderPivot()" id="ov-pivot-grupo">
+              <option value="">Todos</option>
+              <option>Custo do Serviço Vendido</option>
+              <option>Custo do Serviço Vendido ( Consultoria / In-Company )</option>
+              <option>Despesas Administrativas</option>
+              <option>Despesas Comerciais</option>
+              <option>Despesas com Pessoal</option>
+              <option>Despesas Financeiras</option>
+              <option>Despesas Marketing</option>
+              <option>Despesas Tributárias</option>
+              <option>Empréstimos e Financiamentos</option>
+              <option>Investimentos</option>
+              <option>Sócios</option>
+            </select>
+            <svg class="pill-chevron" viewBox="0 0 24 24" fill="none" stroke="rgba(255,255,255,.5)" stroke-width="2" width="11" height="11"><polyline points="6 9 12 15 18 9"/></svg>
+          </div>
+          <div class="pill-dropdown" style="background:rgba(255,255,255,.1);border-color:rgba(255,255,255,.2)">
+            <svg viewBox="0 0 24 24" fill="none" stroke="rgba(255,255,255,.7)" stroke-width="2" width="13" height="13"><circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/></svg>
+            <span class="pill-label" style="color:rgba(255,255,255,.6)">Status:</span>
+            <select class="pill-select" style="color:#fff" onchange="document.getElementById('pivot-status').value=this.value;renderPivot()" id="ov-pivot-status">
+              <option value="">Todos</option>
+              <option value="Em Aberto">Em Aberto</option>
+              <option value="Recebido">Pago</option>
+              <option value="EM ATRASO">Em Atraso</option>
+            </select>
+            <svg class="pill-chevron" viewBox="0 0 24 24" fill="none" stroke="rgba(255,255,255,.5)" stroke-width="2" width="11" height="11"><polyline points="6 9 12 15 18 9"/></svg>
+          </div>
+        </div>
+        <!-- Tabela no overlay (mesmos IDs — mova via JS) -->
+        <div id="pivot-overlay-body"></div>
+      </div>
+    </div>
+
+  </section>
+
+  <!-- ===== FLUXO DE CAIXA ===== -->
+  <section class="page" id="page-fluxo">
+
+    <!-- Header -->
+    <div class="flx2-header">
+      <div class="flx2-header-left">
+        <h1 class="page-title">Fluxo de Caixa Projetado</h1>
+        <p class="page-sub">Visão consolidada de entradas, saídas e saldo</p>
+      </div>
+      <div class="header-actions">
+        <div class="ms-widget" id="msw-fluxo-empresa"><button class="ms-trigger" type="button" onclick="msToggle('fluxo-empresa')"><span class="ms-label" id="mslbl-fluxo-empresa">Todas as Empresas</span><svg class="ms-chevron" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" width="12" height="12"><polyline points="6 9 12 15 18 9"/></svg></button><div class="ms-panel" id="mspanel-fluxo-empresa"><label class="ms-opt ms-all-opt"><input type="checkbox" class="ms-all-cb" checked onchange="msSelectAll('fluxo-empresa')"><span>Todas as Empresas</span></label><div class="ms-divider"></div><label class="ms-opt"><input type="checkbox" class="ms-cb" value="CDPI PHARMA" onchange="msChange('fluxo-empresa')"><span>CDPI PHARMA</span></label><label class="ms-opt"><input type="checkbox" class="ms-cb" value="FACULDADE CDPI" onchange="msChange('fluxo-empresa')"><span>FACULDADE CDPI</span></label><label class="ms-opt"><input type="checkbox" class="ms-cb" value="CONSULTORES" onchange="msChange('fluxo-empresa')"><span>CONSULTORES</span></label><label class="ms-opt"><input type="checkbox" class="ms-cb" value="EKOS" onchange="msChange('fluxo-empresa')"><span>EKOS</span></label><label class="ms-opt"><input type="checkbox" class="ms-cb" value="ESTABILIDADE" onchange="msChange('fluxo-empresa')"><span>ESTABILIDADE</span></label><label class="ms-opt"><input type="checkbox" class="ms-cb" value="QUIRON" onchange="msChange('fluxo-empresa')"><span>QUIRON</span></label></div></div>
+      </div>
+    </div>
+
+    <!-- Filter bar -->
+    <div class="flx2-filter-bar">
+      <div class="flx2-filter-group">
+        <label class="flx2-filter-label">Período</label>
+        <input type="date" class="flx2-date-input" id="flx-dt-ini" onchange="renderFluxo()">
+        <span class="flx2-filter-sep">até</span>
+        <input type="date" class="flx2-date-input" id="flx-dt-fim" onchange="renderFluxo()">
+      </div>
+      <div class="flx2-filter-group">
+        <label class="flx2-filter-label">Saldo Inicial (R$)</label>
+        <input type="number" class="flx2-num-input" id="flx-saldo-input" placeholder="0,00" onchange="renderFluxo()">
+      </div>
+      <button class="flx2-btn-update" onclick="renderFluxo()">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" width="14" height="14"><polyline points="1 4 1 10 7 10"/><path d="M3.51 15a9 9 0 1 0 .49-3.14"/></svg>
+        Atualizar
+      </button>
+    </div>
+
+    <!-- 5 KPI cards -->
+    <div class="flx2-kpi-row">
+      <div class="flx2-kpi flx2-kpi-blue">
+        <div class="flx2-kpi-ico">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" width="20" height="20"><rect x="2" y="5" width="20" height="14" rx="2"/><line x1="2" y1="10" x2="22" y2="10"/></svg>
+        </div>
+        <div class="flx2-kpi-body">
+          <span class="flx2-kpi-label">Saldo Inicial</span>
+          <span class="flx2-kpi-value" id="flx-saldo-ini">R$ 0</span>
+        </div>
+      </div>
+      <div class="flx2-kpi flx2-kpi-green">
+        <div class="flx2-kpi-ico">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" width="20" height="20"><polyline points="23 6 13.5 15.5 8.5 10.5 1 18"/></svg>
+        </div>
+        <div class="flx2-kpi-body">
+          <span class="flx2-kpi-label">Entradas</span>
+          <span class="flx2-kpi-sub" id="flx-ent-count">0 lançamentos</span>
+          <span class="flx2-kpi-value flx2-value-green" id="flx-ent-prev">R$ 0</span>
+        </div>
+      </div>
+      <div class="flx2-kpi flx2-kpi-red">
+        <div class="flx2-kpi-ico">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" width="20" height="20"><polyline points="23 18 13.5 8.5 8.5 13.5 1 6"/></svg>
+        </div>
+        <div class="flx2-kpi-body">
+          <span class="flx2-kpi-label">Saídas</span>
+          <span class="flx2-kpi-sub" id="flx-sai-count">0 lançamentos</span>
+          <span class="flx2-kpi-value flx2-value-red" id="flx-sai-prev">R$ 0</span>
+        </div>
+      </div>
+      <div class="flx2-kpi flx2-kpi-auto">
+        <div class="flx2-kpi-ico">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" width="20" height="20"><line x1="12" y1="2" x2="12" y2="22"/><path d="M17 5H9.5a3.5 3.5 0 0 0 0 7h5a3.5 3.5 0 0 1 0 7H6"/></svg>
+        </div>
+        <div class="flx2-kpi-body">
+          <span class="flx2-kpi-label">Saldo do Período</span>
+          <span class="flx2-kpi-value" id="flx-saldo-periodo">R$ 0</span>
+        </div>
+      </div>
+      <div class="flx2-kpi flx2-kpi-navy">
+        <div class="flx2-kpi-ico">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" width="20" height="20"><polyline points="22 12 18 12 15 21 9 3 6 12 2 12"/></svg>
+        </div>
+        <div class="flx2-kpi-body">
+          <span class="flx2-kpi-label">Saldo Final</span>
+          <span class="flx2-kpi-value" id="flx-saldo-proj">R$ 0</span>
+        </div>
+      </div>
+    </div>
+
+    <!-- Tabs -->
+    <div class="flx2-tabs">
+      <button class="flx2-tab active" id="flxtab-evolucao" onclick="flxTab('evolucao', this)">📈 Evolução Mensal</button>
+      <button class="flx2-tab" id="flxtab-lancamentos" onclick="flxTab('lancamentos', this)">📋 Lançamentos <span id="flx-lanc-badge" class="flx2-tab-badge">0</span></button>
+    </div>
+
+    <!-- Tab: Evolução Mensal -->
+    <div id="flx-tab-evolucao" class="flx2-tab-content">
+
+      <!-- Chart card -->
+      <div class="card chart-card" style="margin-top:0">
+        <div class="chart-header">
+          <h3 class="chart-title">Evolução do Fluxo de Caixa</h3>
+          <div class="flx2-view-toggle">
+            <button class="flx2-view-btn active" id="flxvbtn-mensal" onclick="flxSetView('mensal',this)">Mensal</button>
+            <button class="flx2-view-btn" id="flxvbtn-diario" onclick="flxSetView('diario',this)">Diário</button>
+          </div>
+        </div>
+        <div class="chart-wrap" style="height:300px"><canvas id="chart-fluxo-main"></canvas></div>
+      </div>
+
+      <!-- Resumo Mensal table -->
+      <div class="card table-card" style="margin-top:0">
+        <div class="chart-header">
+          <h3 class="chart-title">Resumo Mensal</h3>
+        </div>
+        <div class="table-wrap">
+          <table class="data-table flx2-summary-table">
+            <thead>
+              <tr>
+                <th>Período</th>
+                <th class="text-right">Saldo Abertura</th>
+                <th class="text-right">Entradas</th>
+                <th class="text-right">Saídas</th>
+                <th class="text-right">Saldo do Mês</th>
+                <th class="text-right">Saldo Acumulado</th>
+              </tr>
+            </thead>
+            <tbody id="fluxo-tbody"></tbody>
+          </table>
+        </div>
+      </div>
+
+      <!-- Projected table by grupoConta -->
+      <div class="card table-card" style="margin-top:0">
+        <div class="chart-header">
+          <h3 class="chart-title">Fluxo de Caixa Projetado — por Grupo de Conta</h3>
+        </div>
+        <div id="flx-proj-table" class="table-wrap"></div>
+      </div>
+
+    </div><!-- /tab evolucao -->
+
+    <!-- Tab: Lançamentos -->
+    <div id="flx-tab-lancamentos" class="flx2-tab-content" style="display:none">
+      <div class="card table-card" style="margin-top:0">
+        <div class="chart-header">
+          <h3 class="chart-title">Lançamentos</h3>
+        </div>
+        <div class="table-wrap">
+          <table class="data-table">
+            <thead>
+              <tr>
+                <th>Vencimento</th>
+                <th>Empresa</th>
+                <th>Pessoa / Descrição</th>
+                <th>Grupo de Conta</th>
+                <th>Forma</th>
+                <th>Status</th>
+                <th class="text-right">Valor</th>
+                <th>Tipo</th>
+              </tr>
+            </thead>
+            <tbody id="flx-lanc-tbody"></tbody>
+          </table>
+        </div>
+      </div>
+    </div><!-- /tab lancamentos -->
+
+  </section>
+
+  <!-- ===== POR EMPRESA ===== -->
+  <section class="page" id="page-empresa">
+    <div class="page-header">
+      <div>
+        <h1 class="page-title">Análise por Empresa</h1>
+        <p class="page-sub">Desempenho financeiro consolidado por unidade</p>
+      </div>
+    </div>
+
+    <div class="cards-grid cards-4" id="empresa-cards"></div>
+
+    <div class="cards-grid cards-2" style="margin-top:0">
+      <div class="card chart-card">
+        <div class="chart-header">
+          <h3 class="chart-title">Receita × Despesa por Empresa</h3>
+          <span class="chart-sub">Comparativo consolidado</span>
+        </div>
+        <div class="chart-wrap" style="height:280px"><canvas id="chart-emp-bar"></canvas></div>
+      </div>
+      <div class="card chart-card">
+        <div class="chart-header">
+          <h3 class="chart-title">Participação nas Despesas</h3>
+          <span class="chart-sub">Distribuição percentual</span>
+        </div>
+        <div class="chart-wrap" style="height:280px"><canvas id="chart-emp-pie"></canvas></div>
+      </div>
+    </div>
+
+    <div id="empresa-details"></div>
+  </section>
+
+  <!-- ===== PROJETADO X REALIZADO ===== -->
+  <section class="page" id="page-projetado">
+    <div class="page-header">
+      <div>
+        <h1 class="page-title">Projetado × Realizado</h1>
+        <p class="page-sub">Análise de aderência ao orçamento</p>
+      </div>
+      <div class="header-actions">
+        <div class="ms-widget" id="msw-proj-empresa"><button class="ms-trigger" type="button" onclick="msToggle('proj-empresa')"><span class="ms-label" id="mslbl-proj-empresa">Todas as Empresas</span><svg class="ms-chevron" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" width="12" height="12"><polyline points="6 9 12 15 18 9"/></svg></button><div class="ms-panel" id="mspanel-proj-empresa"><label class="ms-opt ms-all-opt"><input type="checkbox" class="ms-all-cb" checked onchange="msSelectAll('proj-empresa')"><span>Todas as Empresas</span></label><div class="ms-divider"></div><label class="ms-opt"><input type="checkbox" class="ms-cb" value="CDPI PHARMA" onchange="msChange('proj-empresa')"><span>CDPI PHARMA</span></label><label class="ms-opt"><input type="checkbox" class="ms-cb" value="FACULDADE CDPI" onchange="msChange('proj-empresa')"><span>FACULDADE CDPI</span></label><label class="ms-opt"><input type="checkbox" class="ms-cb" value="CONSULTORES" onchange="msChange('proj-empresa')"><span>CONSULTORES</span></label><label class="ms-opt"><input type="checkbox" class="ms-cb" value="EKOS" onchange="msChange('proj-empresa')"><span>EKOS</span></label><label class="ms-opt"><input type="checkbox" class="ms-cb" value="ESTABILIDADE" onchange="msChange('proj-empresa')"><span>ESTABILIDADE</span></label><label class="ms-opt"><input type="checkbox" class="ms-cb" value="QUIRON" onchange="msChange('proj-empresa')"><span>QUIRON</span></label></div></div>
+      </div>
+    </div>
+
+    <div class="cards-grid cards-3">
+      <div class="card kpi-card">
+        <div class="kpi-icon kpi-blue"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" width="22" height="22"><polyline points="23 6 13.5 15.5 8.5 10.5 1 18"/></svg></div>
+        <div class="kpi-body">
+          <span class="kpi-label">Receita Projetada</span>
+          <span class="kpi-value" id="proj-rec-proj">R$ 0</span>
+          <span class="kpi-sub">Meta do período</span>
+        </div>
+      </div>
+      <div class="card kpi-card">
+        <div class="kpi-icon kpi-green"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" width="22" height="22"><polyline points="20 6 9 17 4 12"/></svg></div>
+        <div class="kpi-body">
+          <span class="kpi-label">Receita Realizada</span>
+          <span class="kpi-value text-success" id="proj-rec-real">R$ 0</span>
+          <span class="kpi-sub" id="proj-rec-pct">0% da meta</span>
+        </div>
+      </div>
+      <div class="card kpi-card">
+        <div class="kpi-icon kpi-navy"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" width="22" height="22"><line x1="18" y1="20" x2="18" y2="10"/><line x1="12" y1="20" x2="12" y2="4"/><line x1="6" y1="20" x2="6" y2="14"/></svg></div>
+        <div class="kpi-body">
+          <span class="kpi-label">Diferença</span>
+          <span class="kpi-value" id="proj-rec-diff">R$ 0</span>
+          <span class="kpi-sub text-muted">Projetado − Realizado</span>
+        </div>
+      </div>
+    </div>
+
+    <div class="card chart-card" style="margin-top:0">
+      <div class="chart-header">
+        <h3 class="chart-title">Receitas: Projetado × Realizado por Empresa</h3>
+      </div>
+      <div class="chart-wrap" style="height:280px"><canvas id="chart-proj-rec"></canvas></div>
+    </div>
+
+    <div class="card chart-card" style="margin-top:0">
+      <div class="chart-header">
+        <h3 class="chart-title">Despesas: Projetado × Realizado por Grupo de Conta</h3>
+      </div>
+      <div class="chart-wrap" style="height:300px"><canvas id="chart-proj-desp"></canvas></div>
+    </div>
+
+    <div class="card table-card" style="margin-top:0">
+      <div class="chart-header"><h3 class="chart-title">Comparativo por Grupo de Conta</h3></div>
+      <div class="table-wrap">
+        <table class="data-table">
+          <thead>
+            <tr>
+              <th>Grupo de Conta</th>
+              <th class="text-right">Projetado</th>
+              <th class="text-right">Realizado</th>
+              <th class="text-right">Diferença</th>
+              <th class="text-right">% Realizado</th>
+              <th>Status</th>
+            </tr>
+          </thead>
+          <tbody id="proj-tbody"></tbody>
+        </table>
+      </div>
+    </div>
+  </section>
+
+  <!-- ===== PROJEÇÃO DIÁRIA ===== -->
+  <section class="page" id="page-projecao-diaria">
+
+    <!-- Cabeçalho — mesmo estilo Contas a Pagar -->
+    <div class="pag2-header">
+      <div class="pag2-header-left">
+        <div class="pag2-hdr-icon">
+          <svg viewBox="0 0 24 24" fill="none" stroke="white" stroke-width="2" width="22" height="22"><rect x="3" y="4" width="18" height="18" rx="2"/><line x1="16" y1="2" x2="16" y2="6"/><line x1="8" y1="2" x2="8" y2="6"/><line x1="3" y1="10" x2="21" y2="10"/></svg>
+        </div>
+        <div>
+          <h1 class="pag2-title">Projeção Diária</h1>
+          <p class="pag2-sub" id="pd2-period-label">Abril · 2026</p>
+        </div>
+      </div>
+      <div class="pag2-header-right">
+        <select class="pag2-hdr-select" id="pd-mes" onchange="renderProjecaoDiaria()">
+          <option value="01">Janeiro</option><option value="02">Fevereiro</option>
+          <option value="03">Março</option><option value="04" selected>Abril</option>
+          <option value="05">Maio</option><option value="06">Junho</option>
+          <option value="07">Julho</option><option value="08">Agosto</option>
+          <option value="09">Setembro</option><option value="10">Outubro</option>
+          <option value="11">Novembro</option><option value="12">Dezembro</option>
+        </select>
+        <select class="pag2-hdr-select" id="pd-ano" onchange="renderProjecaoDiaria()">
+          <option value="2025">2025</option><option value="2026" selected>2026</option>
+        </select>
+        <div class="ms-widget" id="msw-pd-empresa">
+          <button class="ms-trigger pag2-ms-hdr" type="button" onclick="msToggle('pd-empresa')">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" width="13" height="13"><path d="M3 9l9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"/><polyline points="9 22 9 12 15 12 15 22"/></svg>
+            <span class="ms-label" id="mslbl-pd-empresa">Todas as Empresas</span>
+            <svg class="ms-chevron" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" width="12" height="12"><polyline points="6 9 12 15 18 9"/></svg>
+          </button>
+          <div class="ms-panel" id="mspanel-pd-empresa">
+            <label class="ms-opt ms-all-opt"><input type="checkbox" class="ms-all-cb" checked onchange="msSelectAll('pd-empresa')"><span>Todas as Empresas</span></label>
+            <div class="ms-divider"></div>
+            <label class="ms-opt"><input type="checkbox" class="ms-cb" value="CDPI PHARMA" onchange="msChange('pd-empresa')"><span>CDPI PHARMA</span></label>
+            <label class="ms-opt"><input type="checkbox" class="ms-cb" value="FACULDADE CDPI" onchange="msChange('pd-empresa')"><span>FACULDADE CDPI</span></label>
+            <label class="ms-opt"><input type="checkbox" class="ms-cb" value="CONSULTORES" onchange="msChange('pd-empresa')"><span>CONSULTORES</span></label>
+            <label class="ms-opt"><input type="checkbox" class="ms-cb" value="EKOS" onchange="msChange('pd-empresa')"><span>EKOS</span></label>
+            <label class="ms-opt"><input type="checkbox" class="ms-cb" value="ESTABILIDADE" onchange="msChange('pd-empresa')"><span>ESTABILIDADE</span></label>
+            <label class="ms-opt"><input type="checkbox" class="ms-cb" value="QUIRON" onchange="msChange('pd-empresa')"><span>QUIRON</span></label>
+          </div>
+        </div>
+        <button class="pag2-btn-sec" onclick="exportProjecaoDiariaCSV()">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" width="14" height="14"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="7 10 12 15 17 10"/><line x1="12" y1="15" x2="12" y2="3"/></svg>
+          Exportar CSV
+        </button>
+      </div>
+    </div>
+
+    <!-- KPI cards -->
+    <div class="pd2-kpi-grid" id="pd-kpi-bar"></div>
+
+    <!-- Tabela -->
+    <div class="pd2-table-card">
+      <div class="pd2-table-header">
+        <span class="pd2-table-title">Detalhamento por Dia</span>
+        <span class="pd2-table-legend">
+          <span class="pd2-leg-item pd2-leg-pagar">● A Pagar</span>
+          <span class="pd2-leg-item pd2-leg-receber">● A Receber</span>
+          <span class="pd2-leg-item pd2-leg-vista">● À Vista</span>
+          <span class="pd2-leg-item pd2-leg-fluxo">● Saldo</span>
+        </span>
+      </div>
+      <div class="pd2-table-wrap">
+        <table class="pd2-table" id="pd-table">
+          <thead id="pd-thead"></thead>
+          <tbody id="pd-tbody"></tbody>
+          <tfoot id="pd-tfoot"></tfoot>
+        </table>
+      </div>
+    </div>
+
+  </section>
+
+  <!-- ===== BOLETIM DE CAIXA DIÁRIO ===== -->
+  <section class="page" id="page-boletim">
+
+    <div class="pag2-header">
+      <div class="pag2-header-left">
+        <div class="pag2-hdr-icon">
+          <svg viewBox="0 0 24 24" fill="none" stroke="white" stroke-width="2" width="24" height="24"><rect x="3" y="4" width="18" height="18" rx="2"/><line x1="16" y1="2" x2="16" y2="6"/><line x1="8" y1="2" x2="8" y2="6"/><line x1="3" y1="10" x2="21" y2="10"/><line x1="8" y1="14" x2="16" y2="14"/><line x1="8" y1="18" x2="12" y2="18"/></svg>
+        </div>
+        <div>
+          <h1 class="pag2-title">Boletim de Caixa Diário</h1>
+          <p class="pag2-sub" id="bol-sub">Selecione a empresa e a data</p>
+        </div>
+      </div>
+      <div class="pag2-header-right">
+        <input type="date" id="bol-data" class="pag2-hdr-select" style="padding:7px 10px;font-size:13px" onchange="renderBoletim()">
+        <div class="ms-widget" id="msw-bol-empresa">
+          <button class="ms-trigger pag2-ms-hdr" type="button" onclick="msToggle('bol-empresa')">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" width="13" height="13"><path d="M3 9l9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"/><polyline points="9 22 9 12 15 12 15 22"/></svg>
+            <span class="ms-label" id="mslbl-bol-empresa">Todas as Empresas</span>
+            <svg class="ms-chevron" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" width="12" height="12"><polyline points="6 9 12 15 18 9"/></svg>
+          </button>
+          <div class="ms-panel" id="mspanel-bol-empresa">
+            <label class="ms-opt ms-all-opt"><input type="checkbox" class="ms-all-cb" checked onchange="msSelectAll('bol-empresa')"><span>Todas as Empresas</span></label>
+            <div class="ms-divider"></div>
+            <label class="ms-opt"><input type="checkbox" class="ms-cb" value="FACULDADE CDPI" onchange="msChange('bol-empresa')"><span>FACULDADE CDPI</span></label>
+            <label class="ms-opt"><input type="checkbox" class="ms-cb" value="CDPI PHARMA" onchange="msChange('bol-empresa')"><span>CDPI PHARMA</span></label>
+            <label class="ms-opt"><input type="checkbox" class="ms-cb" value="CONSULTORES" onchange="msChange('bol-empresa')"><span>CONSULTORES</span></label>
+            <label class="ms-opt"><input type="checkbox" class="ms-cb" value="EKOS" onchange="msChange('bol-empresa')"><span>EKOS</span></label>
+            <label class="ms-opt"><input type="checkbox" class="ms-cb" value="ESTABILIDADE" onchange="msChange('bol-empresa')"><span>ESTABILIDADE</span></label>
+            <label class="ms-opt"><input type="checkbox" class="ms-cb" value="QUIRON" onchange="msChange('bol-empresa')"><span>QUIRON</span></label>
+          </div>
+        </div>
+        <div style="display:flex;align-items:center;gap:4px">
+          <div class="ms-widget" id="msw-bol-forma">
+            <button class="ms-trigger pag2-ms-hdr" type="button" onclick="msToggle('bol-forma')">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" width="13" height="13"><rect x="2" y="5" width="20" height="14" rx="2"/><line x1="2" y1="10" x2="22" y2="10"/></svg>
+              <span class="ms-label" id="mslbl-bol-forma">Todas as Formas</span>
+              <svg class="ms-chevron" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" width="12" height="12"><polyline points="6 9 12 15 18 9"/></svg>
+            </button>
+            <div class="ms-panel" id="mspanel-bol-forma"></div>
+          </div>
+          <button class="pag2-btn-sec" onclick="addBolForma()" title="Adicionar nova forma de pagamento" style="padding:7px 11px;font-size:16px;line-height:1">+</button>
+        </div>
+        <div class="ms-widget" id="msw-bol-conta">
+          <button class="ms-trigger pag2-ms-hdr" type="button" onclick="msToggle('bol-conta')">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" width="13" height="13"><line x1="8" y1="6" x2="21" y2="6"/><line x1="8" y1="12" x2="21" y2="12"/><line x1="8" y1="18" x2="21" y2="18"/><line x1="3" y1="6" x2="3.01" y2="6"/><line x1="3" y1="12" x2="3.01" y2="12"/><line x1="3" y1="18" x2="3.01" y2="18"/></svg>
+            <span class="ms-label" id="mslbl-bol-conta">Todas as Contas</span>
+            <svg class="ms-chevron" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" width="12" height="12"><polyline points="6 9 12 15 18 9"/></svg>
+          </button>
+          <div class="ms-panel" id="mspanel-bol-conta" style="min-width:240px"></div>
+        </div>
+        <button class="pag2-btn-sec" onclick="printBoletim()">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" width="14" height="14"><polyline points="6 9 6 2 18 2 18 9"/><path d="M6 18H4a2 2 0 0 1-2-2v-5a2 2 0 0 1 2-2h16a2 2 0 0 1 2 2v5a2 2 0 0 1-2 2h-2"/><rect x="6" y="14" width="12" height="8"/></svg>
+          Imprimir
+        </button>
+      </div>
+    </div>
+
+    <!-- CORPO DO BOLETIM -->
+    <div class="bol-body" id="bol-print-area">
+
+      <!-- BLOCO: BANCOS -->
+      <div class="card bol-block">
+        <div class="bol-block-header" id="bol-bancos-title">Bancos</div>
+        <table class="bol-table">
+          <tbody id="bol-bancos-tbody"></tbody>
+        </table>
+        <div class="bol-add-row">
+          <button class="btn-outline" style="font-size:12px;padding:4px 12px" onclick="addBancoRow()">+ Adicionar linha</button>
+        </div>
+        <div class="bol-total-row">
+          <span class="bol-total-label">Total Receita</span>
+          <div class="bol-total-right">
+            <span class="bol-total-prefix">R$</span>
+            <span class="bol-total-value" id="bol-total-receita">0,00</span>
+          </div>
+        </div>
+      </div>
+
+      <!-- BLOCO: CONTAS A PAGAR DO DIA -->
+      <div class="card bol-block" style="margin-top:0">
+        <div class="bol-block-header" id="bol-pagar-title">Contas a Pagar</div>
+        <table class="bol-table">
+          <thead>
+            <tr class="bol-thead-row">
+              <th class="bol-th">Descrição / Fornecedor</th>
+              <th class="bol-th text-right" style="width:140px">Valor</th>
+            </tr>
+          </thead>
+          <tbody id="bol-pagar-tbody"></tbody>
+        </table>
+        <div class="bol-total-row bol-total-pagar">
+          <span class="bol-total-label"></span>
+          <div class="bol-total-right">
+            <span class="bol-total-prefix">R$</span>
+            <span class="bol-total-value" id="bol-total-despesa">0,00</span>
+          </div>
+        </div>
+      </div>
+
+      <!-- CAIXA FINAL -->
+      <div class="card bol-caixa-final-card">
+        <span class="bol-cf-label">Caixa Final = Receitas − Despesas</span>
+        <div class="bol-cf-right">
+          <span class="bol-cf-prefix">R$</span>
+          <span class="bol-cf-value" id="bol-caixa-final">0,00</span>
+        </div>
+      </div>
+
+    </div>
+  </section>
+
+  <!-- ===== PARÂMETROS ===== -->
+  <section class="page" id="page-parametros">
+    <div class="page-header">
+      <div>
+        <h1 class="page-title">Parâmetros do Sistema</h1>
+        <p class="page-sub">Configurações, empresas e categorias financeiras</p>
+      </div>
+    </div>
+
+    <!-- Projeção Financeira -->
+    <div class="card" style="border-left:4px solid #1e3a6b">
+      <div class="chart-header">
+        <h3 class="chart-title">Parâmetros da Projeção Mensal</h3>
+        <span class="chart-sub">Valores usados no card "Projeção do Mês" no Dashboard — edite e salve para atualizar</span>
+      </div>
+      <div style="display:grid;grid-template-columns:repeat(4,1fr);gap:16px;margin-top:8px">
+        <div class="form-group">
+          <label>Saldo Inicial (R$)</label>
+          <input type="number" class="input-filter" id="param-saldo-ini" value="1045540" style="width:100%" oninput="previewProj()">
+        </div>
+        <div class="form-group">
+          <label>Total a Pagar — Consolidado (R$)</label>
+          <input type="number" class="input-filter" id="param-a-pagar-ext" value="1509947" style="width:100%" oninput="previewProj()">
+        </div>
+        <div class="form-group">
+          <label>Total a Receber — Consolidado (R$)</label>
+          <input type="number" class="input-filter" id="param-a-receber-ext" value="918035" style="width:100%" oninput="previewProj()">
+        </div>
+        <div class="form-group">
+          <label>Projeção de Faturamento (R$)</label>
+          <input type="number" class="input-filter" id="param-proj-fat" value="600000" style="width:100%" oninput="previewProj()">
+        </div>
+        <div class="form-group">
+          <label>Limite de Antecipação (R$)</label>
+          <input type="number" class="input-filter" id="param-limite-ant" value="600000" style="width:100%" oninput="previewProj()">
+        </div>
+        <div class="form-group">
+          <label>A Receber à Vista (R$)</label>
+          <input type="number" class="input-filter" id="param-avista" value="118560" style="width:100%" oninput="previewProj()">
+        </div>
+        <div class="form-group">
+          <label>Alerta de Vencimento (dias antes)</label>
+          <input type="number" class="input-filter" id="param-alerta-dias" value="7" style="width:100%">
+        </div>
+        <div class="form-group" style="display:flex;flex-direction:column;justify-content:flex-end">
+          <button class="btn-primary" style="width:100%" onclick="saveParams()">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" width="15" height="15"><path d="M19 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h11l5 5v11a2 2 0 0 1-2 2z"/><polyline points="17 21 17 13 7 13 7 21"/><polyline points="7 3 7 8 15 8"/></svg>
+            Salvar Parâmetros
+          </button>
+        </div>
+      </div>
+      <!-- Preview da projeção -->
+      <div id="param-proj-preview" style="margin-top:16px"></div>
+    </div>
+
+    <div class="cards-grid cards-2">
+      <div class="card">
+        <div class="chart-header"><h3 class="chart-title">Empresas Cadastradas</h3></div>
+        <div class="param-list" id="param-empresas"></div>
+        <button class="btn-outline" style="margin-top:12px" onclick="addParamItem('empresas')">+ Adicionar Empresa</button>
+      </div>
+      <div class="card">
+        <div class="chart-header"><h3 class="chart-title">Grupos de Conta</h3></div>
+        <div class="param-list" id="param-grupos"></div>
+        <button class="btn-outline" style="margin-top:12px" onclick="addParamItem('grupos')">+ Adicionar Grupo</button>
+      </div>
+    </div>
+
+    <div class="cards-grid cards-2" style="margin-top:0">
+      <div class="card">
+        <div class="chart-header"><h3 class="chart-title">Formas de Pagamento</h3></div>
+        <div class="param-list" id="param-formas"></div>
+      </div>
+      <div class="card">
+        <div class="chart-header"><h3 class="chart-title">Perfil e Acesso</h3></div>
+        <div class="param-form">
+          <div class="form-group">
+            <label>Perfil do Usuário Atual</label>
+            <select class="select-filter" style="width:100%">
+              <option>Financeiro</option><option>Administrador</option>
+              <option>Diretoria</option><option>Consulta</option>
+            </select>
+          </div>
+          <button class="btn-primary" style="width:100%;margin-top:8px">Salvar Configurações</button>
+        </div>
+      </div>
+    </div>
+  </section>
+
+</main>
+
+<!-- MODAL -->
+<div class="modal-overlay" id="modal-overlay" onclick="closeModal()">
+  <div class="modal" onclick="event.stopPropagation()">
+    <div class="modal-header">
+      <h3 id="modal-title">Novo Lançamento</h3>
+      <button class="modal-close" onclick="closeModal()">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" width="18" height="18"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg>
+      </button>
+    </div>
+    <div class="modal-body" id="modal-body"></div>
+    <div class="modal-footer">
+      <button class="btn-outline" onclick="closeModal()">Cancelar</button>
+      <button class="btn-primary" onclick="saveModal()">Salvar</button>
+    </div>
+  </div>
+</div>
+
+<script src="js/data.js?v=20260421i"></script>
+<script src="js/app.js?v=20260429b"></script>
+</body>
+</html>
