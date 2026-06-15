@@ -1897,41 +1897,6 @@ function renderEmpresa() {
       </div>`;
   }).join('');
 
-  // Bar chart
-  createChart('chart-emp-bar', {
-    type: 'bar',
-    data: {
-      labels: empresas,
-      datasets: [
-        { label: 'Receita', data: empresas.map(e => sumField(byEmp[e]?.filter(r => r.tipo==='C')||[], 'receita')), backgroundColor: PALETTE.blue + 'cc', borderRadius: 5 },
-        { label: 'Despesa', data: empresas.map(e => sumField(byEmp[e]?.filter(r => r.tipo==='D')||[], 'despesa')), backgroundColor: PALETTE.red  + 'cc', borderRadius: 5 }
-      ]
-    },
-    options: {
-      responsive: true, maintainAspectRatio: false,
-      plugins: { legend: { position: 'top' }, tooltip: { callbacks: { label: c => ' ' + fmt(c.raw) } } },
-      scales: {
-        x: { grid: { display: false } },
-        y: { grid: { color: '#f1f5f9' }, ticks: { callback: v => fmtShort(v) } }
-      }
-    }
-  });
-
-  // Pie chart
-  const despesas = empresas.map(e => sumField(byEmp[e]?.filter(r => r.tipo==='D')||[], 'despesa'));
-  createChart('chart-emp-pie', {
-    type: 'doughnut',
-    data: {
-      labels: empresas,
-      datasets: [{ data: despesas, backgroundColor: empresas.map(e => EMPRESA_COLORS[e] || PALETTE.blue), borderWidth: 0 }]
-    },
-    options: {
-      responsive: true, maintainAspectRatio: false,
-      cutout: '60%',
-      plugins: { legend: { position: 'right' }, tooltip: { callbacks: { label: c => ` ${c.label}: ${fmt(c.raw)}` } } }
-    }
-  });
-
   // Detail tables per empresa
   const detEl = document.getElementById('empresa-details');
   detEl.innerHTML = empresas.map(emp => {
