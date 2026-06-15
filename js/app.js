@@ -1754,11 +1754,35 @@ function renderFluxo() {
   _renderFlxLancamentos(data);
 }
 
+// Ordem fixa dos grupos por lado
+const FLX_GRUPOS_ENTRADAS = [
+  'Receita Operacionais',
+  'Receitas Financeiras',
+  'Outras Receitas',
+  'Transitórios',
+];
+const FLX_GRUPOS_SAIDAS = [
+  'Custo do Serviço Vendido',
+  'Custo do Serviço Vendido ( Consultoria / In-Company )',
+  'Serviços de Orientação Profissional',
+  'Despesas com Pessoal',
+  'Despesas Administrativas',
+  'Despesas Comerciais',
+  'Despesas Marketing',
+  'Investimentos',
+  'Despesas Tributárias',
+  'Despesas Financeiras',
+  'Despesas Com Multas/Taxas',
+  'Empréstimos e Financiamentos',
+  'Sócios',
+  'Transitórios',
+];
+
 function _renderFlxProjTable(data, months, mLabel) {
   const container = document.getElementById('flx-proj-table');
   if (!container) return;
 
-  // Group by tipo (ENTRADAS/SAÍDAS) → grupoConta → month sums
+  // Acumula valores por side → grupo → mês
   const groups = { ENTRADAS: {}, SAÍDAS: {} };
   data.forEach(r => {
     if (!r.vencimento) return;
@@ -1766,50 +1790,56 @@ function _renderFlxProjTable(data, months, mLabel) {
     const grp  = r.grupoConta || '(Sem Grupo)';
     const side = r.tipo === 'C' ? 'ENTRADAS' : 'SAÍDAS';
     if (!groups[side][grp]) groups[side][grp] = {};
-    if (!groups[side][grp][ym]) groups[side][grp][ym] = 0;
-    groups[side][grp][ym] += r.tipo === 'C' ? (r.receita || 0) : (r.despesa || 0);
+    groups[side][grp][ym] = (groups[side][grp][ym] || 0) + (r.tipo === 'C' ? (r.receita || 0) : (r.despesa || 0));
   });
 
-  // Calculate totals per month per side for AV%
+  // Totais mensais por side (para AV%)
   const sideTotals = { ENTRADAS: {}, SAÍDAS: {} };
-  Object.entries(groups).forEach(([side, grps]) => {
+  ['ENTRADAS','SAÍDAS'].forEach(side => {
     months.forEach(m => {
-      sideTotals[side][m] = Object.values(grps).reduce((s, mg) => s + (mg[m] || 0), 0);
+      sideTotals[side][m] = Object.values(groups[side]).reduce((s, mg) => s + (mg[m] || 0), 0);
     });
   });
 
+  const colSpan = 2 + months.length * 2;
   const headerCols = months.map(m => `<th class="text-right">${mLabel(m)}</th><th class="text-right flx2-av">AV%</th>`).join('');
   let html = `<table class="data-table flx2-proj-table">
     <thead>
       <tr>
-        <th style="min-width:200px">Grupo de Conta</th>
+        <th style="min-width:220px">Grupo de Conta</th>
         <th class="text-right">Total</th>
         ${headerCols}
       </tr>
     </thead>
     <tbody>`;
 
+  const SIDE_GRUPOS = { ENTRADAS: FLX_GRUPOS_ENTRADAS, SAÍDAS: FLX_GRUPOS_SAIDAS };
+
   ['ENTRADAS','SAÍDAS'].forEach(side => {
-    const isSai = side === 'SAÍDAS';
-    const sideCls = isSai ? 'flx2-side-sai' : 'flx2-side-ent';
+    const sideCls  = side === 'SAÍDAS' ? 'flx2-side-sai' : 'flx2-side-ent';
     const sideTotal = months.reduce((s, m) => s + (sideTotals[side][m] || 0), 0);
+    const label     = side === 'ENTRADAS' ? '⬆ ENTRADAS' : '⬇ SAÍDAS';
+
     html += `<tr class="flx2-group-header ${sideCls}" onclick="flxToggleGroup(this)">
-      <td colspan="${2 + months.length * 2}">
+      <td colspan="${colSpan}">
         <div class="flx2-group-inner">
           <span class="flx2-group-arrow">▼</span>
-          <strong>${side === 'ENTRADAS' ? '⬆ ENTRADAS' : '⬇ SAÍDAS'}</strong>
+          <strong>${label}</strong>
           <span class="flx2-group-total">${fmt(sideTotal)}</span>
         </div>
       </td>
     </tr>`;
 
-    const grpNames = Object.keys(groups[side]).sort();
+    // Grupos extras que existem nos dados mas não na lista fixa
+    const extraGrps = Object.keys(groups[side]).filter(g => !SIDE_GRUPOS[side].includes(g) && g !== '(Sem Grupo)');
+    const grpNames  = [...SIDE_GRUPOS[side], ...extraGrps.sort()];
+
     grpNames.forEach(grp => {
-      const mg = groups[side][grp];
+      const mg       = groups[side][grp] || {};
       const rowTotal = months.reduce((s, m) => s + (mg[m] || 0), 0);
       let prev = null;
       const cols = months.map(m => {
-        const v = mg[m] || 0;
+        const v  = mg[m] || 0;
         const av = sideTotals[side][m] > 0 ? (v / sideTotals[side][m] * 100).toFixed(1) : '—';
         const cell = `<td class="text-right">${v > 0 ? fmt(v) : '<span class="flx2-zero">—</span>'}</td>
           <td class="text-right flx2-av">${av !== '—' ? av + '%' : '—'}</td>`;
