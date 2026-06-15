@@ -2892,6 +2892,29 @@ body {
 .flx2-av { color: var(--text-3); font-size: 11px; min-width: 50px; }
 .flx2-zero { color: var(--text-3); }
 
+/* Linha de grupo (2º nível) */
+.flx2-proj-grp-row {
+  background: #f4f7fc;
+  cursor: pointer;
+  user-select: none;
+}
+.flx2-proj-grp-row:hover { background: #edf1fb; }
+.flx2-grp-name {
+  padding-left: 20px;
+  font-size: 13px;
+  font-weight: 700;
+  color: var(--text-1);
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+.flx2-grp-val { font-size: 13px; }
+.flx2-side-val { font-size: 13px; font-weight: 700; }
+
+/* Linha de conta (3º nível) */
+.flx2-proj-conta-row { background: var(--surface); }
+.flx2-proj-conta-row:hover { background: #fafbfd; }
+
 .flx2-group-header {
   background: var(--bg-2);
   cursor: pointer;
@@ -2910,7 +2933,7 @@ body {
 .flx2-group-total { margin-left: auto; font-size: 14px; color: var(--text-1); }
 
 .flx2-proj-row td { font-size: 13px; }
-.flx2-conta-name { padding-left: 32px; color: var(--text-2); font-size: 12px; }
+.flx2-conta-name { padding-left: 40px; color: var(--text-2); font-size: 12px; }
 
 /* Responsive */
 @media (max-width: 1200px) {

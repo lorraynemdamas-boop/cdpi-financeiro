@@ -1782,32 +1782,44 @@ function _renderFlxProjTable(data, months, mLabel) {
   const container = document.getElementById('flx-proj-table');
   if (!container) return;
 
-  // Acumula valores por side → grupo → mês
-  const groups = { ENTRADAS: {}, SAÍDAS: {} };
+  // Acumula valores por side → grupo → conta → mês
+  const tree = { ENTRADAS: {}, SAÍDAS: {} };
   data.forEach(r => {
     if (!r.vencimento) return;
     const ym   = r.vencimento.slice(0, 7);
     const grp  = r.grupoConta || '(Sem Grupo)';
+    const cont = r.conta      || '(Sem Conta)';
     const side = r.tipo === 'C' ? 'ENTRADAS' : 'SAÍDAS';
-    if (!groups[side][grp]) groups[side][grp] = {};
-    groups[side][grp][ym] = (groups[side][grp][ym] || 0) + (r.tipo === 'C' ? (r.receita || 0) : (r.despesa || 0));
+    const val  = r.tipo === 'C' ? (r.receita || 0) : (r.despesa || 0);
+    if (!tree[side][grp])        tree[side][grp] = {};
+    if (!tree[side][grp][cont])  tree[side][grp][cont] = {};
+    tree[side][grp][cont][ym] = (tree[side][grp][cont][ym] || 0) + val;
   });
 
-  // Totais mensais por side (para AV%)
+  // Totais mensais por grupo e por side
+  const grpTotals  = { ENTRADAS: {}, SAÍDAS: {} };
   const sideTotals = { ENTRADAS: {}, SAÍDAS: {} };
   ['ENTRADAS','SAÍDAS'].forEach(side => {
+    Object.entries(tree[side]).forEach(([grp, contas]) => {
+      if (!grpTotals[side][grp]) grpTotals[side][grp] = {};
+      months.forEach(m => {
+        const v = Object.values(contas).reduce((s, cm) => s + (cm[m] || 0), 0);
+        grpTotals[side][grp][m] = v;
+      });
+    });
     months.forEach(m => {
-      sideTotals[side][m] = Object.values(groups[side]).reduce((s, mg) => s + (mg[m] || 0), 0);
+      sideTotals[side][m] = Object.values(grpTotals[side]).reduce((s, gm) => s + (gm[m] || 0), 0);
     });
   });
 
-  const colSpan = 2 + months.length * 2;
-  const headerCols = months.map(m => `<th class="text-right">${mLabel(m)}</th><th class="text-right flx2-av">AV%</th>`).join('');
+  const colSpan    = 2 + months.length;
+  const headerCols = months.map(m => `<th class="text-right">${mLabel(m)}</th>`).join('');
+
   let html = `<table class="data-table flx2-proj-table">
     <thead>
       <tr>
-        <th style="min-width:220px">Grupo de Conta</th>
-        <th class="text-right">Total</th>
+        <th style="min-width:240px">Descrição</th>
+        <th class="text-right" style="min-width:110px">Total</th>
         ${headerCols}
       </tr>
     </thead>
@@ -1815,42 +1827,58 @@ function _renderFlxProjTable(data, months, mLabel) {
 
   const SIDE_GRUPOS = { ENTRADAS: FLX_GRUPOS_ENTRADAS, SAÍDAS: FLX_GRUPOS_SAIDAS };
 
+  // Ordem das contas por grupo (do Excel oficial)
+  const CONTA_ORDER_MAP = {
+    'Receita Operacionais': ['Cursos','Pós Graduação','PDPI','Graduação','Consultoria','Patrocínio','Prova','Workshop','Graduação - CDPI','In Company'],
+  };
+
+  const fmtVal = v => v !== 0 ? fmt(v) : '0';
+
   ['ENTRADAS','SAÍDAS'].forEach(side => {
-    const sideCls  = side === 'SAÍDAS' ? 'flx2-side-sai' : 'flx2-side-ent';
+    const sideCls   = side === 'SAÍDAS' ? 'flx2-side-sai' : 'flx2-side-ent';
     const sideTotal = months.reduce((s, m) => s + (sideTotals[side][m] || 0), 0);
     const label     = side === 'ENTRADAS' ? '⬆ ENTRADAS' : '⬇ SAÍDAS';
 
-    html += `<tr class="flx2-group-header ${sideCls}" onclick="flxToggleGroup(this)">
-      <td colspan="${colSpan}">
-        <div class="flx2-group-inner">
-          <span class="flx2-group-arrow">▼</span>
-          <strong>${label}</strong>
-          <span class="flx2-group-total">${fmt(sideTotal)}</span>
-        </div>
-      </td>
+    // Linha do side (colapsável)
+    const sideCols = months.map(m => `<td class="text-right flx2-side-val">${fmtVal(sideTotals[side][m] || 0)}</td>`).join('');
+    html += `<tr class="flx2-group-header ${sideCls}" data-flx-side="${side}" onclick="flxToggleGroup(this)">
+      <td><div class="flx2-group-inner"><span class="flx2-group-arrow">▼</span><strong>${label}</strong></div></td>
+      <td class="text-right flx2-side-val"><strong>${fmtVal(sideTotal)}</strong></td>
+      ${sideCols}
     </tr>`;
 
-    // Grupos extras que existem nos dados mas não na lista fixa
-    const extraGrps = Object.keys(groups[side]).filter(g => !SIDE_GRUPOS[side].includes(g) && g !== '(Sem Grupo)');
+    // Grupos extras não na lista fixa
+    const extraGrps = Object.keys(tree[side]).filter(g => !SIDE_GRUPOS[side].includes(g));
     const grpNames  = [...SIDE_GRUPOS[side], ...extraGrps.sort()];
 
     grpNames.forEach(grp => {
-      const mg       = groups[side][grp] || {};
-      const rowTotal = months.reduce((s, m) => s + (mg[m] || 0), 0);
-      let prev = null;
-      const cols = months.map(m => {
-        const v  = mg[m] || 0;
-        const av = sideTotals[side][m] > 0 ? (v / sideTotals[side][m] * 100).toFixed(1) : '—';
-        const cell = `<td class="text-right">${v > 0 ? fmt(v) : '<span class="flx2-zero">—</span>'}</td>
-          <td class="text-right flx2-av">${av !== '—' ? av + '%' : '—'}</td>`;
-        prev = v;
-        return cell;
-      }).join('');
-      html += `<tr class="flx2-proj-row flx2-grp-${side}">
-        <td class="flx2-conta-name">${grp}</td>
-        <td class="text-right"><strong>${fmt(rowTotal)}</strong></td>
-        ${cols}
+      const contas   = tree[side][grp] || {};
+      const gm       = grpTotals[side][grp] || {};
+      const grpTotal = months.reduce((s, m) => s + (gm[m] || 0), 0);
+
+      // Linha do grupo
+      const grpCols = months.map(m => `<td class="text-right flx2-grp-val"><strong>${fmtVal(gm[m] || 0)}</strong></td>`).join('');
+      html += `<tr class="flx2-proj-grp-row" data-flx-side="${side}" onclick="flxToggleGroup(this)">
+        <td class="flx2-grp-name"><span class="flx2-group-arrow">▼</span>${grp}</td>
+        <td class="text-right flx2-grp-val"><strong>${fmtVal(grpTotal)}</strong></td>
+        ${grpCols}
       </tr>`;
+
+      // Linhas de conta (detalhe)
+      const knownOrder = CONTA_ORDER_MAP[grp] || [];
+      const extraContas = Object.keys(contas).filter(c => !knownOrder.includes(c)).sort();
+      const contaNames  = [...knownOrder, ...extraContas];
+
+      contaNames.forEach(cont => {
+        const cm       = contas[cont] || {};
+        const contTotal= months.reduce((s, m) => s + (cm[m] || 0), 0);
+        const contCols = months.map(m => `<td class="text-right">${fmtVal(cm[m] || 0)}</td>`).join('');
+        html += `<tr class="flx2-proj-conta-row" data-flx-side="${side}" data-flx-grp="${grp}">
+          <td class="flx2-conta-name">${cont}</td>
+          <td class="text-right">${fmtVal(contTotal)}</td>
+          ${contCols}
+        </tr>`;
+      });
     });
   });
 
@@ -1858,14 +1886,28 @@ function _renderFlxProjTable(data, months, mLabel) {
   container.innerHTML = html;
 }
 
-function flxToggleGroup(headerRow) {
-  const side   = headerRow.classList.contains('flx2-side-ent') ? 'ENTRADAS' : 'SAÍDAS';
-  const cls    = 'flx2-grp-' + side;
-  const arrow  = headerRow.querySelector('.flx2-group-arrow');
+function flxToggleGroup(row) {
+  const arrow  = row.querySelector('.flx2-group-arrow');
   const isOpen = arrow?.textContent === '▼';
-  const rows   = headerRow.parentElement?.querySelectorAll('.' + cls) || [];
-  rows.forEach(r => r.style.display = isOpen ? 'none' : '');
-  if (arrow) arrow.textContent = isOpen ? '▶' : '▼';
+  const hide   = isOpen;
+  const side   = row.dataset.flxSide;
+  const tbody  = row.closest('tbody');
+  if (!tbody) return;
+
+  if (row.classList.contains('flx2-group-header')) {
+    // Colapsa todos os grupos e contas deste side
+    tbody.querySelectorAll(`[data-flx-side="${side}"]`).forEach(r => {
+      if (r !== row) r.style.display = hide ? 'none' : '';
+    });
+  } else if (row.classList.contains('flx2-proj-grp-row')) {
+    // Colapsa apenas as contas deste grupo
+    const grp = row.querySelector('.flx2-grp-name')?.textContent.replace(/[▼▶]/g,'').trim();
+    tbody.querySelectorAll(`.flx2-proj-conta-row[data-flx-side="${side}"]`).forEach(r => {
+      if (r.dataset.flxGrp === grp) r.style.display = hide ? 'none' : '';
+    });
+  }
+
+  if (arrow) arrow.textContent = hide ? '▶' : '▼';
 }
 
 function _renderFlxLancamentos(data) {
