@@ -1885,7 +1885,6 @@ function renderEmpresa() {
         <div class="kpi-body" style="width:100%">
           <div style="display:flex;justify-content:space-between;align-items:flex-start">
             <span class="kpi-label" style="font-size:13px;font-weight:700;color:var(--text-1)">${emp}</span>
-            <span class="badge" style="background:${color}22;color:${color}">${d.length} reg.</span>
           </div>
           <div style="margin-top:12px;display:grid;grid-template-columns:1fr 1fr;gap:8px">
             <div><div style="font-size:11px;color:var(--text-3)">Receita</div><div style="font-weight:700;color:var(--success)">${fmtShort(receita)}</div></div>
