@@ -2947,3 +2947,135 @@ body {
   .flx2-kpi-row { grid-template-columns: 1fr; }
   .flx2-header  { flex-direction: column; align-items: flex-start; }
 }
+
+/* ============================================================
+   MOBILE RESPONSIVE — global
+   ============================================================ */
+
+/* ── Topbar mobile ── */
+.mob-topbar {
+  display: none;
+  align-items: center;
+  gap: 12px;
+  background: var(--surface);
+  border-bottom: 1px solid var(--border);
+  padding: 10px 16px;
+  position: sticky;
+  top: 0;
+  z-index: 90;
+  box-shadow: var(--shadow-sm);
+}
+.mob-hamburger {
+  width: 38px; height: 38px;
+  border: none; background: var(--bg);
+  border-radius: 8px; cursor: pointer;
+  display: flex; align-items: center; justify-content: center;
+  color: var(--cdpi-navy); flex-shrink: 0;
+}
+.mob-hamburger:hover { background: var(--border); }
+.mob-topbar-logo {
+  display: flex; align-items: center; gap: 8px;
+}
+.mob-topbar-title {
+  font-size: 15px; font-weight: 700; color: var(--cdpi-navy);
+}
+
+/* ── Overlay escuro ao abrir sidebar no mobile ── */
+.sidebar-overlay {
+  display: none;
+  position: fixed;
+  inset: 0;
+  background: rgba(0,0,0,.45);
+  z-index: 99;
+}
+.sidebar-overlay.active { display: block; }
+
+/* ── Sidebar visível quando .open no mobile ── */
+@media (max-width: 768px) {
+  .mob-topbar { display: flex; }
+
+  .sidebar {
+    transform: translateX(calc(-1 * var(--sidebar-w)));
+    z-index: 110;
+  }
+  .sidebar.open { transform: none; }
+
+  .main-content { margin-left: 0; }
+
+  /* Page padding menor */
+  .page { padding: 12px 12px 24px; }
+
+  /* Grids de KPI — 2 colunas em telas médias */
+  .dash-kpi-grid { grid-template-columns: repeat(2, 1fr) !important; }
+  .pd2-kpi-grid  { grid-template-columns: repeat(2, 1fr) !important; }
+  .pag2-kpi-grid { grid-template-columns: repeat(2, 1fr) !important; }
+  .flx2-kpi-row  { grid-template-columns: repeat(2, 1fr) !important; }
+
+  /* Headers das páginas — empilhar no mobile */
+  .pag2-header {
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 12px;
+    padding: 14px 16px;
+  }
+  .pag2-header-right {
+    flex-wrap: wrap;
+    width: 100%;
+    gap: 6px;
+  }
+  /* Empresas multiselect ocupa largura disponível */
+  .ms-trigger.pag2-ms-hdr { min-width: unset !important; flex: 1; }
+
+  /* Botões de ação no header — compactos */
+  .pag2-btn-sec, .pag2-btn-pri {
+    flex: 1;
+    justify-content: center;
+    padding: 0 10px;
+    font-size: 11px;
+  }
+
+  /* Filter card */
+  .pag2-filter-row { flex-direction: column; align-items: stretch; gap: 10px; }
+  .pag2-filter-item { width: 100%; }
+  .pag2-filter-item select,
+  .pag2-filter-item input { width: 100%; }
+  .pag2-clear-btn { width: 100%; justify-content: center; }
+  .pag2-search-wrap { width: 100%; }
+  .pag2-search-wrap input { width: 100% !important; }
+
+  /* Tabelas — scroll horizontal garantido */
+  .table-wrap, .pag2-table-card .table-wrap,
+  .pd2-table-wrap, .pivot-table-wrap,
+  .flx2-proj-table { overflow-x: auto; -webkit-overflow-scrolling: touch; }
+
+  /* Proj mes cards */
+  .proj-mes-grid { grid-template-columns: repeat(2, 1fr); }
+
+  /* Fluxo filter bar */
+  .flx2-filter-bar { flex-wrap: wrap; gap: 10px; }
+  .flx2-filter-bar input,
+  .flx2-filter-bar select { flex: 1 1 140px; }
+
+  /* Tabs que transbordam */
+  .pag2-tabs { flex-wrap: wrap; gap: 4px; }
+  .pag2-tab  { flex: 1; justify-content: center; font-size: 12px; padding: 8px 8px; }
+}
+
+@media (max-width: 480px) {
+  /* KPI de 1 coluna em telas muito pequenas */
+  .dash-kpi-grid { grid-template-columns: 1fr !important; }
+  .pd2-kpi-grid  { grid-template-columns: 1fr !important; }
+  .pag2-kpi-grid { grid-template-columns: 1fr !important; }
+  .flx2-kpi-row  { grid-template-columns: 1fr !important; }
+
+  /* Textos menores nas KPI */
+  .pd2-kpi-value { font-size: 14px; }
+  .pag2-kpi-value { font-size: 16px; }
+
+  /* Esconde texto "Exportar" em botões de header, mantém ícone */
+  .pag2-btn-sec .btn-text,
+  .pag2-btn-pri .btn-text { display: none; }
+
+  /* Tabs só ícone */
+  .pag2-tab svg { margin: 0; }
+}

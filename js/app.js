@@ -197,6 +197,7 @@ const EMPRESA_COLORS = {
 // ─── Navigation ──────────────────────────────────────
 function navigate(page) {
   closePivotOverlay(); // fecha overlay antes de trocar de página
+  closeSidebar();      // fecha sidebar no mobile ao navegar
   document.querySelectorAll('.page').forEach(p => p.classList.remove('active'));
   document.querySelectorAll('.nav-item').forEach(n => n.classList.remove('active'));
 
@@ -236,6 +237,20 @@ function toggleSidebar() {
   const main    = document.getElementById('main');
   sidebar.classList.toggle('collapsed');
   main.classList.toggle('expanded');
+}
+
+function openSidebar() {
+  const sidebar  = document.getElementById('sidebar');
+  const overlay  = document.getElementById('sidebar-overlay');
+  sidebar.classList.add('open');
+  if (overlay) overlay.classList.add('active');
+}
+
+function closeSidebar() {
+  const sidebar  = document.getElementById('sidebar');
+  const overlay  = document.getElementById('sidebar-overlay');
+  sidebar.classList.remove('open');
+  if (overlay) overlay.classList.remove('active');
 }
 
 // ─── DASHBOARD ───────────────────────────────────────

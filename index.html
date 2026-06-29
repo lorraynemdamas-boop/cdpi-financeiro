@@ -87,11 +87,31 @@
   </div>
 </aside>
 
+<!-- Overlay para fechar sidebar no mobile -->
+<div class="sidebar-overlay" id="sidebar-overlay" onclick="closeSidebar()"></div>
+
 <!-- MAIN -->
 <main class="main-content" id="main">
 
-  <!-- TOP BAR -->
-  <!-- topbar removida para maximizar espaço de conteúdo -->
+  <!-- TOPBAR MOBILE -->
+  <div class="mob-topbar" id="mob-topbar">
+    <button class="mob-hamburger" onclick="openSidebar()" aria-label="Menu">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" width="22" height="22">
+        <line x1="3" y1="6" x2="21" y2="6"/><line x1="3" y1="12" x2="21" y2="12"/><line x1="3" y1="18" x2="21" y2="18"/>
+      </svg>
+    </button>
+    <div class="mob-topbar-logo">
+      <svg width="24" height="24" viewBox="0 0 40 40" fill="none">
+        <ellipse cx="20" cy="20" rx="18" ry="7.5" stroke="#1a3060" stroke-width="2.2" transform="rotate(0 20 20)"/>
+        <ellipse cx="20" cy="20" rx="18" ry="7.5" stroke="#1a3060" stroke-width="2.2" transform="rotate(60 20 20)"/>
+        <ellipse cx="20" cy="20" rx="18" ry="7.5" stroke="#1a3060" stroke-width="2.2" transform="rotate(120 20 20)"/>
+        <circle cx="20" cy="20" r="3" fill="#1a3060"/>
+      </svg>
+      <span class="mob-topbar-title">CDPI Financeiro</span>
+    </div>
+  </div>
+
+  <!-- TOP BAR (hidden, mantido por IDs) -->
   <div style="display:none">
     <input id="global-search">
     <span id="notif-count"></span>
