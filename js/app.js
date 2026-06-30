@@ -1307,6 +1307,138 @@ function renderPivot() {
 
   const grandFalta = grandProj - grandPago;
 
+  const grupos = Object.keys(pivot).sort();
+  // Inicializa estados de expansão
+  grupos.forEach(g => {
+    if (pivotExpanded[g] === undefined) pivotExpanded[g] = false;
+    Object.keys(pivot[g]).forEach(c => {
+      const key = g + '::' + c;
+      if (pivotExpandedConta[key] === undefined) pivotExpandedConta[key] = false;
+    });
+  });
+
+  // ── Mobile: layout de cards ──────────────────────────
+  if (isMobile()) {
+    const table = document.getElementById('pivot-table');
+    if (table) table.style.display = 'none';
+
+    let mob = document.getElementById('pivot-mob-cards');
+    if (!mob) {
+      mob = document.createElement('div');
+      mob.id = 'pivot-mob-cards';
+      mob.className = 'pv-mob-list';
+      table.parentNode.insertBefore(mob, table);
+    }
+
+    let html = '';
+    grupos.forEach(grupo => {
+      const contas  = Object.keys(pivot[grupo]).sort();
+      const grpExp  = pivotExpanded[grupo];
+      const groupId = 'pg_' + grupo.replace(/\W/g, '_');
+
+      let gTotalProj = 0, gTotalPago = 0;
+      contas.forEach(c => Object.values(pivot[grupo][c]).forEach(p => {
+        gTotalProj += p.proj; gTotalPago += p.pago;
+      }));
+      const gTotalFalta = gTotalProj - gTotalPago;
+
+      html += `<div class="pv-mob-group">
+        <div class="pv-mob-group-hdr" onclick="togglePivotMob('${groupId}','${esc(grupo)}')">
+          <div class="pv-mob-group-top">
+            <span class="pv-mob-toggle" id="pmtog-${groupId}">${grpExp ? '−' : '+'}</span>
+            <span class="pv-mob-group-name">${esc(grupo)}</span>
+          </div>
+          <div class="pv-mob-vals">
+            <div class="pv-mob-val pv-mob-proj">
+              <span class="pv-mob-val-lbl">💰 PROJETADO</span>
+              <span class="pv-mob-val-num">${fmtPivot(gTotalProj)}</span>
+            </div>
+            <div class="pv-mob-val pv-mob-pago">
+              <span class="pv-mob-val-lbl">✅ PAGO</span>
+              <span class="pv-mob-val-num">${gTotalPago > 0 ? fmtPivot(gTotalPago) : '—'}</span>
+            </div>
+            <div class="pv-mob-val pv-mob-falta">
+              <span class="pv-mob-val-lbl">⏳ FALTA</span>
+              <span class="pv-mob-val-num">${fmtPivot(gTotalFalta)}</span>
+            </div>
+          </div>
+        </div>
+        <div class="pv-mob-contas" id="pmc-${groupId}" style="display:${grpExp ? '' : 'none'}">`;
+
+      contas.forEach(conta => {
+        const pessoas  = Object.keys(pivot[grupo][conta]).sort();
+        const contaKey = grupo + '::' + conta;
+        const contaId  = 'pc_' + (grupo + '_' + conta).replace(/\W/g, '_');
+        const cntExp   = pivotExpandedConta[contaKey];
+
+        let cTotalProj = 0, cTotalPago = 0;
+        pessoas.forEach(p => {
+          cTotalProj += pivot[grupo][conta][p].proj;
+          cTotalPago += pivot[grupo][conta][p].pago;
+        });
+        const cTotalFalta = cTotalProj - cTotalPago;
+
+        html += `<div class="pv-mob-conta">
+          <div class="pv-mob-conta-top" onclick="togglePivotContaMob('${esc(grupo)}','${esc(conta)}','${contaId}')">
+            <span class="pv-mob-toggle-conta" id="pmtog-${contaId}">${cntExp ? '−' : '+'}</span>
+            <span class="pv-mob-conta-name">${esc(conta)}</span>
+          </div>
+          <div class="pv-mob-conta-vals">
+            <span class="pv-mob-cv proj">${cTotalProj > 0 ? fmtPivot(cTotalProj) : '—'}</span>
+            <span class="pv-mob-cv pago">${cTotalPago > 0 ? fmtPivot(cTotalPago) : '—'}</span>
+            <span class="pv-mob-cv falta">${cTotalFalta > 0 ? fmtPivot(cTotalFalta) : '—'}</span>
+          </div>
+          <div class="pv-mob-pessoas" id="pmp-${contaId}" style="display:${cntExp ? '' : 'none'}">`;
+
+        pessoas.forEach(pessoa => {
+          const pProj  = pivot[grupo][conta][pessoa].proj;
+          const pPago  = pivot[grupo][conta][pessoa].pago;
+          const pFalta = pProj - pPago;
+          html += `<div class="pv-mob-pessoa">
+            <span class="pv-mob-pessoa-name">${esc(pessoa)}</span>
+            <div class="pv-mob-conta-vals">
+              <span class="pv-mob-cv proj">${pProj > 0 ? fmtPivot(pProj) : '—'}</span>
+              <span class="pv-mob-cv pago">${pPago > 0 ? fmtPivot(pPago) : '—'}</span>
+              <span class="pv-mob-cv falta">${pFalta > 0 ? fmtPivot(pFalta) : '—'}</span>
+            </div>
+          </div>`;
+        });
+
+        html += `</div></div>`;
+      });
+
+      html += `</div></div>`;
+    });
+
+    // Total geral
+    html += `<div class="pv-mob-total">
+      <span class="pv-mob-total-label">Total Geral</span>
+      <div class="pv-mob-vals">
+        <div class="pv-mob-val pv-mob-proj">
+          <span class="pv-mob-val-lbl">💰 PROJETADO</span>
+          <span class="pv-mob-val-num">${fmtPivot(grandProj)}</span>
+        </div>
+        <div class="pv-mob-val pv-mob-pago">
+          <span class="pv-mob-val-lbl">✅ PAGO</span>
+          <span class="pv-mob-val-num">${grandPago > 0 ? fmtPivot(grandPago) : '—'}</span>
+        </div>
+        <div class="pv-mob-val pv-mob-falta">
+          <span class="pv-mob-val-lbl">⏳ FALTA</span>
+          <span class="pv-mob-val-num">${fmtPivot(grandProj - grandPago)}</span>
+        </div>
+      </div>
+    </div>`;
+
+    mob.innerHTML = html;
+    return;
+  }
+
+  // ── Desktop: tabela padrão ────────────────────────────
+  const table = document.getElementById('pivot-table');
+  if (table) table.style.display = '';
+  const old = document.getElementById('pivot-mob-cards');
+  if (old) old.remove();
+
   // ── Header ──────────────────────────────────────────
   const thead = document.getElementById('pivot-thead');
   thead.innerHTML = `
@@ -1320,23 +1452,12 @@ function renderPivot() {
   // ── Body ────────────────────────────────────────────
   const tbody = document.getElementById('pivot-tbody');
   let rows = '';
-  const grupos = Object.keys(pivot).sort();
-
-  // Inicializa estados de expansão
-  grupos.forEach(g => {
-    if (pivotExpanded[g] === undefined) pivotExpanded[g] = false;
-    Object.keys(pivot[g]).forEach(c => {
-      const key = g + '::' + c;
-      if (pivotExpandedConta[key] === undefined) pivotExpandedConta[key] = false;
-    });
-  });
 
   grupos.forEach(grupo => {
     const contas    = Object.keys(pivot[grupo]).sort();
     const grpExp    = pivotExpanded[grupo];
     const groupId   = 'pg_' + grupo.replace(/\W/g, '_');
 
-    // ── Totais do Grupo ──
     let gTotalProj = 0, gTotalPago = 0;
     contas.forEach(c => {
       Object.values(pivot[grupo][c]).forEach(p => {
@@ -1346,7 +1467,6 @@ function renderPivot() {
     });
     const gTotalFalta = gTotalProj - gTotalPago;
 
-    // ── Linha do Grupo (Nível 1) ──
     rows += `<tr class="pivot-row-group" onclick="togglePivotGroup('${groupId}','${esc(grupo)}')">
       <td>
         <span class="pivot-toggle" id="tog-${groupId}">${grpExp ? '−' : '+'}</span>
@@ -1363,7 +1483,6 @@ function renderPivot() {
       const contaId   = 'pc_' + (grupo + '_' + conta).replace(/\W/g, '_');
       const cntExp    = pivotExpandedConta[contaKey];
 
-      // ── Totais da Conta ──
       let cTotalProj = 0, cTotalPago = 0;
       pessoas.forEach(p => {
         cTotalProj += pivot[grupo][conta][p].proj;
@@ -1371,7 +1490,6 @@ function renderPivot() {
       });
       const cTotalFalta = cTotalProj - cTotalPago;
 
-      // ── Linha da Conta (Nível 2) ──
       rows += `<tr class="pivot-row-conta grp-child-${groupId}" style="display:${grpExp ? '' : 'none'}"
                    onclick="togglePivotConta('${esc(grupo)}','${esc(conta)}','${contaId}')">
         <td>
@@ -1383,7 +1501,6 @@ function renderPivot() {
         <td class="pv-falta ${cTotalFalta === 0 ? 'pivot-zero' : ''}">${cTotalFalta > 0 ? fmtPivot(cTotalFalta) : '—'}</td>
       </tr>`;
 
-      // ── Linhas de Pessoa (Nível 3) ──
       pessoas.forEach(pessoa => {
         const pProj  = pivot[grupo][conta][pessoa].proj;
         const pPago  = pivot[grupo][conta][pessoa].pago;
@@ -1401,7 +1518,6 @@ function renderPivot() {
 
   tbody.innerHTML = rows;
 
-  // ── Footer ──────────────────────────────────────────
   const tfoot = document.getElementById('pivot-tfoot');
   tfoot.innerHTML = `<tr>
     <td>Total Geral</td>
@@ -1448,6 +1564,25 @@ function togglePivotConta(grupo, conta, contaId) {
   document.querySelectorAll(`.cnt-child-${contaId}`).forEach(row => {
     row.style.display = show ? '' : 'none';
   });
+}
+
+function togglePivotMob(groupId, grupo) {
+  pivotExpanded[grupo] = !pivotExpanded[grupo];
+  const show = pivotExpanded[grupo];
+  const tog  = document.getElementById(`pmtog-${groupId}`);
+  if (tog) tog.textContent = show ? '−' : '+';
+  const contas = document.getElementById(`pmc-${groupId}`);
+  if (contas) contas.style.display = show ? '' : 'none';
+}
+
+function togglePivotContaMob(grupo, conta, contaId) {
+  const key = grupo + '::' + conta;
+  pivotExpandedConta[key] = !pivotExpandedConta[key];
+  const show = pivotExpandedConta[key];
+  const tog  = document.getElementById(`pmtog-${contaId}`);
+  if (tog) tog.textContent = show ? '−' : '+';
+  const pessoas = document.getElementById(`pmp-${contaId}`);
+  if (pessoas) pessoas.style.display = show ? '' : 'none';
 }
 
 function expandAllPivot() {

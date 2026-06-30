@@ -3052,6 +3052,40 @@ body {
   .dash-kpi-label { font-size: 10px; }
   .dash-kpi-value { font-size: 16px; }
   .dash-kpi-meta  { font-size: 10px; }
+
+  /* ── Pivot filter card no mobile ── */
+  .pag2-pivot-filter-card {
+    flex-direction: column;
+    align-items: stretch;
+    gap: 10px;
+    padding: 12px 12px;
+  }
+  .pivot-filter-left  { gap: 8px; }
+  .pivot-filter-right { justify-content: flex-start; gap: 6px; flex-wrap: wrap; }
+  .pill-dropdown      { flex: 1; min-width: 0; }
+  .pill-select        { max-width: none; min-width: 0; flex: 1; }
+  .pag2-pivot-btn     { flex: 1; justify-content: center; font-size: 11px; padding: 0 8px; }
+
+  /* ── Pivot table — scroll horizontal + colunas fixas ── */
+  #pivot-table-container { max-height: none; }
+
+  .pivot-table {
+    table-layout: fixed !important;
+    width: 350px !important;
+    min-width: unset !important;
+  }
+  .pivot-table th:first-child,
+  .pivot-table td:first-child {
+    width: 130px;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+  }
+  .pivot-table th:nth-child(2), .pivot-table td:nth-child(2),
+  .pivot-table th:nth-child(4), .pivot-table td:nth-child(4) { width: 75px; }
+  .pivot-table th:nth-child(3), .pivot-table td:nth-child(3) { width: 70px; }
+  .pivot-table th:not(:first-child),
+  .pivot-table td:not(:first-child) { font-size: 11px; }
 }
 
 /* ============================================================
@@ -3141,4 +3175,123 @@ body {
   padding: 32px 16px;
   color: var(--text-3);
   font-size: 13px;
+}
+
+/* ── Pivot Table — cards mobile (Grupo → Conta → Pessoa) ── */
+.pv-mob-list { display: flex; flex-direction: column; gap: 8px; padding: 2px 0 8px; }
+
+.pv-mob-group {
+  background: var(--surface);
+  border: 1px solid var(--border);
+  border-radius: 12px;
+  overflow: hidden;
+  box-shadow: var(--shadow-sm);
+}
+.pv-mob-group-hdr {
+  padding: 12px 14px;
+  cursor: pointer;
+  background: linear-gradient(135deg, #111e40 0%, #1a3060 100%);
+  color: #fff;
+}
+.pv-mob-group-top {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  margin-bottom: 10px;
+}
+.pv-mob-toggle {
+  width: 22px; height: 22px; flex-shrink: 0;
+  border-radius: 6px;
+  background: rgba(255,255,255,.15);
+  display: flex; align-items: center; justify-content: center;
+  font-weight: 700; font-size: 14px;
+}
+.pv-mob-group-name {
+  font-size: 12.5px;
+  font-weight: 700;
+  line-height: 1.3;
+}
+.pv-mob-vals {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 6px;
+}
+.pv-mob-val {
+  display: flex; flex-direction: column; gap: 3px;
+  background: rgba(255,255,255,.08);
+  border-radius: 8px;
+  padding: 6px 6px;
+}
+.pv-mob-val-lbl {
+  font-size: 8px;
+  opacity: .85;
+  letter-spacing: .03em;
+  white-space: nowrap;
+}
+.pv-mob-val-num {
+  font-size: 11px;
+  font-weight: 800;
+  white-space: nowrap;
+}
+.pv-mob-falta .pv-mob-val-num { color: #ff9d9d; }
+.pv-mob-pago  .pv-mob-val-num { color: #8fe3b8; }
+
+.pv-mob-contas { background: var(--bg); padding: 6px 10px 8px; }
+.pv-mob-conta { border-bottom: 1px solid var(--border); padding: 8px 2px; }
+.pv-mob-conta:last-child { border-bottom: none; }
+.pv-mob-conta-top {
+  display: flex; align-items: center; gap: 8px; cursor: pointer;
+}
+.pv-mob-toggle-conta {
+  width: 18px; height: 18px; flex-shrink: 0;
+  border-radius: 5px;
+  background: var(--surface);
+  border: 1px solid var(--border-2);
+  display: flex; align-items: center; justify-content: center;
+  font-size: 12px; font-weight: 700;
+  color: var(--text-2);
+}
+.pv-mob-conta-name {
+  font-size: 12px;
+  font-weight: 600;
+  color: var(--text-1);
+  flex: 1;
+}
+.pv-mob-conta-vals {
+  display: flex;
+  gap: 12px;
+  margin-top: 6px;
+  padding-left: 26px;
+}
+.pv-mob-cv { font-size: 11px; font-weight: 700; color: var(--text-2); }
+.pv-mob-cv.falta { color: var(--danger); }
+.pv-mob-cv.pago  { color: var(--success); }
+
+.pv-mob-pessoas {
+  margin-top: 6px;
+  padding-left: 26px;
+  display: flex; flex-direction: column; gap: 6px;
+}
+.pv-mob-pessoa {
+  border-top: 1px dashed var(--border);
+  padding-top: 6px;
+}
+.pv-mob-pessoa-name {
+  font-size: 11px;
+  color: var(--text-2);
+  display: block;
+  margin-bottom: 3px;
+}
+
+.pv-mob-total {
+  background: linear-gradient(135deg, #1a3060 0%, #0f4a30 100%);
+  border-radius: 12px;
+  padding: 12px 14px;
+  color: #fff;
+}
+.pv-mob-total-label {
+  font-size: 12px;
+  font-weight: 700;
+  display: block;
+  margin-bottom: 8px;
 }
