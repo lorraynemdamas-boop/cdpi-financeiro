@@ -3053,3 +3053,92 @@ body {
   .dash-kpi-value { font-size: 16px; }
   .dash-kpi-meta  { font-size: 10px; }
 }
+
+/* ============================================================
+   MOBILE CARDS — Lançamentos (Pagar / Receber)
+   ============================================================ */
+.mob-card-list {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  padding: 4px 0 8px;
+}
+
+.mob-card {
+  background: var(--surface);
+  border: 1px solid var(--border);
+  border-radius: 12px;
+  padding: 12px 14px;
+  border-left: 4px solid var(--border-2);
+  box-shadow: var(--shadow-sm);
+}
+.mob-card-atraso { border-left-color: var(--danger); }
+.mob-card-pago   { border-left-color: var(--success); opacity: .85; }
+
+.mob-card-top {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-bottom: 6px;
+  gap: 6px;
+}
+.mob-card-badges { display: flex; gap: 4px; flex-wrap: wrap; }
+
+.mob-card-venc {
+  font-size: 11px;
+  color: var(--text-2);
+  white-space: nowrap;
+  flex-shrink: 0;
+}
+.mob-card-venc-late { color: var(--danger); font-weight: 700; }
+
+.mob-card-pessoa {
+  font-size: 13px;
+  font-weight: 600;
+  color: var(--text-1);
+  margin-bottom: 2px;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+.mob-card-desc {
+  font-size: 11px;
+  color: var(--text-2);
+  margin-bottom: 8px;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.mob-card-bottom {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 8px;
+  margin-top: 6px;
+  padding-top: 6px;
+  border-top: 1px solid var(--border);
+}
+.mob-card-grupo {
+  font-size: 10px;
+  color: var(--text-3);
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  max-width: 55%;
+}
+.mob-card-valor {
+  font-size: 15px;
+  font-weight: 800;
+  letter-spacing: -.3px;
+  flex-shrink: 0;
+}
+.mob-card-valor-red   { color: var(--danger); }
+.mob-card-valor-green { color: var(--success); }
+
+.mob-card-empty {
+  text-align: center;
+  padding: 32px 16px;
+  color: var(--text-3);
+  font-size: 13px;
+}

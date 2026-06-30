@@ -966,35 +966,52 @@ function renderRecTable() {
   const tbody = document.getElementById('rec-tbody');
   if (!tbody) return;
 
-  tbody.innerHTML = paginated.map(r => {
-    const overdue = isOverdue(r);
-    const rowClass = overdue ? 'row-atraso' : (r.status === 'Recebido' ? 'row-recebido' : '');
-    return `<tr class="${rowClass}">
-      <td>${fmtDate(r.lancamento)}</td>
-      <td><span class="truncate" title="${esc(r.descricao)}">${esc(r.descricao)}</span></td>
-      <td><span class="truncate" title="${esc(r.pessoa)}">${esc(r.pessoa) || '—'}</span></td>
-      <td>${esc(r.conta) || '—'}</td>
-      <td>${esc(r.banco) || '—'}</td>
-      <td>${esc(r.forma) || '—'}</td>
-      <td class="text-right">${r.receita > 0 ? fmt(r.receita) : '—'}</td>
-      <td>${statusDateCell(r.vencimento, overdue)}</td>
-      <td>${r.pagamento ? fmtDate(r.pagamento) : '—'}</td>
-      <td><span class="badge badge-blue">${esc(r.empresa)}</span></td>
-      <td>${statusBadge(r, overdue)}</td>
-      <td><span class="truncate" title="${esc(r.grupoConta)}" style="max-width:120px">${esc(r.grupoConta) || '—'}</span></td>
-      <td class="col-actions">
-        <button class="btn-icon" title="Editar" onclick="editRecord(${r.id},'receber')">
-          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" width="14" height="14"><path d="M11 4H4a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7"/><path d="M18.5 2.5a2.121 2.121 0 0 1 3 3L12 15l-4 1 1-4 9.5-9.5z"/></svg>
-        </button>
-        ${r.status !== 'Recebido' ? `<button class="btn-icon success" title="Marcar como Recebido" onclick="baixar(${r.id},'receber')">
-          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" width="14" height="14"><polyline points="20 6 9 17 4 12"/></svg>
-        </button>` : ''}
-        <button class="btn-icon danger" title="Excluir" onclick="deleteRecord(${r.id})">
-          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" width="14" height="14"><polyline points="3 6 5 6 21 6"/><path d="M19 6l-1 14a2 2 0 0 1-2 2H8a2 2 0 0 1-2-2L5 6"/><path d="M10 11v6"/><path d="M14 11v6"/></svg>
-        </button>
-      </td>
-    </tr>`;
-  }).join('') || '<tr><td colspan="13"><div class="empty-state"><p>Nenhum registro encontrado.</p></div></td></tr>';
+  if (isMobile()) {
+    const table = tbody.closest('table');
+    if (table) table.style.display = 'none';
+    let cardWrap = document.getElementById('rec-mob-cards');
+    if (!cardWrap) {
+      cardWrap = document.createElement('div');
+      cardWrap.id = 'rec-mob-cards';
+      cardWrap.className = 'mob-card-list';
+      table.parentNode.insertBefore(cardWrap, table);
+    }
+    cardWrap.innerHTML = renderMobileCards(paginated, 'receber');
+  } else {
+    const table = tbody.closest('table');
+    if (table) table.style.display = '';
+    const old = document.getElementById('rec-mob-cards');
+    if (old) old.remove();
+    tbody.innerHTML = paginated.map(r => {
+      const overdue = isOverdue(r);
+      const rowClass = overdue ? 'row-atraso' : (r.status === 'Recebido' ? 'row-recebido' : '');
+      return `<tr class="${rowClass}">
+        <td>${fmtDate(r.lancamento)}</td>
+        <td><span class="truncate" title="${esc(r.descricao)}">${esc(r.descricao)}</span></td>
+        <td><span class="truncate" title="${esc(r.pessoa)}">${esc(r.pessoa) || '—'}</span></td>
+        <td>${esc(r.conta) || '—'}</td>
+        <td>${esc(r.banco) || '—'}</td>
+        <td>${esc(r.forma) || '—'}</td>
+        <td class="text-right">${r.receita > 0 ? fmt(r.receita) : '—'}</td>
+        <td>${statusDateCell(r.vencimento, overdue)}</td>
+        <td>${r.pagamento ? fmtDate(r.pagamento) : '—'}</td>
+        <td><span class="badge badge-blue">${esc(r.empresa)}</span></td>
+        <td>${statusBadge(r, overdue)}</td>
+        <td><span class="truncate" title="${esc(r.grupoConta)}" style="max-width:120px">${esc(r.grupoConta) || '—'}</span></td>
+        <td class="col-actions">
+          <button class="btn-icon" title="Editar" onclick="editRecord(${r.id},'receber')">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" width="14" height="14"><path d="M11 4H4a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7"/><path d="M18.5 2.5a2.121 2.121 0 0 1 3 3L12 15l-4 1 1-4 9.5-9.5z"/></svg>
+          </button>
+          ${r.status !== 'Recebido' ? `<button class="btn-icon success" title="Marcar como Recebido" onclick="baixar(${r.id},'receber')">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" width="14" height="14"><polyline points="20 6 9 17 4 12"/></svg>
+          </button>` : ''}
+          <button class="btn-icon danger" title="Excluir" onclick="deleteRecord(${r.id})">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" width="14" height="14"><polyline points="3 6 5 6 21 6"/><path d="M19 6l-1 14a2 2 0 0 1-2 2H8a2 2 0 0 1-2-2L5 6"/><path d="M10 11v6"/><path d="M14 11v6"/></svg>
+          </button>
+        </td>
+      </tr>`;
+    }).join('') || '<tr><td colspan="13"><div class="empty-state"><p>Nenhum registro encontrado.</p></div></td></tr>';
+  }
 
   renderPagination('rec-pagination', page, data.length, 'receber');
 }
@@ -1018,37 +1035,94 @@ function renderPagTable() {
   const tbody = document.getElementById('pag-tbody');
   if (!tbody) return;
 
-  tbody.innerHTML = paginated.map(r => {
-    const overdue = isOverdue(r);
-    const rowClass = overdue ? 'row-atraso' : (r.status === 'Recebido' ? 'row-recebido' : '');
-    return `<tr class="${rowClass}">
-      <td>${fmtDate(r.lancamento)}</td>
-      <td><span class="truncate" title="${esc(r.descricao)}">${esc(r.descricao)}</span></td>
-      <td><span class="truncate" title="${esc(r.pessoa)}">${esc(r.pessoa) || '—'}</span></td>
-      <td>${esc(r.conta) || '—'}</td>
-      <td>${esc(r.banco) || '—'}</td>
-      <td>${esc(r.forma) || '—'}</td>
-      <td class="text-right">${r.despesa > 0 ? fmt(r.despesa) : '—'}</td>
-      <td>${statusDateCell(r.vencimento, overdue)}</td>
-      <td>${r.pagamento ? fmtDate(r.pagamento) : '—'}</td>
-      <td><span class="badge badge-blue">${esc(r.empresa)}</span></td>
-      <td>${statusBadge(r, overdue)}</td>
-      <td><span class="truncate" title="${esc(r.grupoConta)}" style="max-width:120px">${esc(r.grupoConta) || '—'}</span></td>
-      <td class="col-actions">
-        <button class="btn-icon" title="Editar" onclick="editRecord(${r.id},'pagar')">
-          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" width="14" height="14"><path d="M11 4H4a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7"/><path d="M18.5 2.5a2.121 2.121 0 0 1 3 3L12 15l-4 1 1-4 9.5-9.5z"/></svg>
-        </button>
-        ${r.status !== 'Recebido' ? `<button class="btn-icon success" title="Marcar como Pago" onclick="baixar(${r.id},'pagar')">
-          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" width="14" height="14"><polyline points="20 6 9 17 4 12"/></svg>
-        </button>` : ''}
-        <button class="btn-icon danger" title="Excluir" onclick="deleteRecord(${r.id})">
-          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" width="14" height="14"><polyline points="3 6 5 6 21 6"/><path d="M19 6l-1 14a2 2 0 0 1-2 2H8a2 2 0 0 1-2-2L5 6"/></svg>
-        </button>
-      </td>
-    </tr>`;
-  }).join('') || '<tr><td colspan="13"><div class="empty-state"><p>Nenhum registro encontrado.</p></div></td></tr>';
+  if (isMobile()) {
+    const table = tbody.closest('table');
+    if (table) table.style.display = 'none';
+    let cardWrap = document.getElementById('pag-mob-cards');
+    if (!cardWrap) {
+      cardWrap = document.createElement('div');
+      cardWrap.id = 'pag-mob-cards';
+      cardWrap.className = 'mob-card-list';
+      table.parentNode.insertBefore(cardWrap, table);
+    }
+    cardWrap.innerHTML = renderMobileCards(paginated, 'pagar');
+  } else {
+    const table = tbody.closest('table');
+    if (table) table.style.display = '';
+    const old = document.getElementById('pag-mob-cards');
+    if (old) old.remove();
+    tbody.innerHTML = paginated.map(r => {
+      const overdue = isOverdue(r);
+      const rowClass = overdue ? 'row-atraso' : (r.status === 'Recebido' ? 'row-recebido' : '');
+      return `<tr class="${rowClass}">
+        <td>${fmtDate(r.lancamento)}</td>
+        <td><span class="truncate" title="${esc(r.descricao)}">${esc(r.descricao)}</span></td>
+        <td><span class="truncate" title="${esc(r.pessoa)}">${esc(r.pessoa) || '—'}</span></td>
+        <td>${esc(r.conta) || '—'}</td>
+        <td>${esc(r.banco) || '—'}</td>
+        <td>${esc(r.forma) || '—'}</td>
+        <td class="text-right">${r.despesa > 0 ? fmt(r.despesa) : '—'}</td>
+        <td>${statusDateCell(r.vencimento, overdue)}</td>
+        <td>${r.pagamento ? fmtDate(r.pagamento) : '—'}</td>
+        <td><span class="badge badge-blue">${esc(r.empresa)}</span></td>
+        <td>${statusBadge(r, overdue)}</td>
+        <td><span class="truncate" title="${esc(r.grupoConta)}" style="max-width:120px">${esc(r.grupoConta) || '—'}</span></td>
+        <td class="col-actions">
+          <button class="btn-icon" title="Editar" onclick="editRecord(${r.id},'pagar')">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" width="14" height="14"><path d="M11 4H4a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7"/><path d="M18.5 2.5a2.121 2.121 0 0 1 3 3L12 15l-4 1 1-4 9.5-9.5z"/></svg>
+          </button>
+          ${r.status !== 'Recebido' ? `<button class="btn-icon success" title="Marcar como Pago" onclick="baixar(${r.id},'pagar')">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" width="14" height="14"><polyline points="20 6 9 17 4 12"/></svg>
+          </button>` : ''}
+          <button class="btn-icon danger" title="Excluir" onclick="deleteRecord(${r.id})">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" width="14" height="14"><polyline points="3 6 5 6 21 6"/><path d="M19 6l-1 14a2 2 0 0 1-2 2H8a2 2 0 0 1-2-2L5 6"/></svg>
+          </button>
+        </td>
+      </tr>`;
+    }).join('') || '<tr><td colspan="13"><div class="empty-state"><p>Nenhum registro encontrado.</p></div></td></tr>';
+  }
 
   renderPagination('pag-pagination', page, data.length, 'pagar');
+}
+
+// ─── MOBILE CARD RENDERER ──────────────────────────────────
+function isMobile() { return window.innerWidth <= 768; }
+
+function renderMobileCards(paginated, type) {
+  if (!paginated.length) return '<div class="mob-card-empty">Nenhum registro encontrado.</div>';
+  return paginated.map(r => {
+    const overdue  = isOverdue(r);
+    const isPago   = r.status === 'Recebido' || r.status === 'Pago';
+    const valor    = type === 'pagar' ? r.despesa : r.receita;
+    const valClass = type === 'pagar' ? 'mob-card-valor-red' : 'mob-card-valor-green';
+    const borderCls= overdue ? 'mob-card-atraso' : (isPago ? 'mob-card-pago' : '');
+
+    const badge = overdue
+      ? '<span class="badge badge-danger">Em Atraso</span>'
+      : isPago
+        ? '<span class="badge badge-success">Baixado</span>'
+        : '<span class="badge badge-warning">Em Aberto</span>';
+
+    const pessoa = esc(r.pessoa || r.nomeFantasia || '');
+    const grupo  = esc(r.grupoConta || '');
+    const emp    = esc(r.empresa || '');
+    const venc   = r.vencimento ? fmtDate(r.vencimento) : '—';
+    const desc   = esc(r.descricao || '');
+
+    return `
+      <div class="mob-card ${borderCls}">
+        <div class="mob-card-top">
+          <div class="mob-card-badges">${badge}<span class="badge badge-blue">${emp}</span></div>
+          <span class="mob-card-venc ${overdue ? 'mob-card-venc-late' : ''}">Venc. ${venc}</span>
+        </div>
+        ${pessoa ? `<div class="mob-card-pessoa">${pessoa}</div>` : ''}
+        ${desc   ? `<div class="mob-card-desc">${desc}</div>` : ''}
+        <div class="mob-card-bottom">
+          <span class="mob-card-grupo">${grupo}</span>
+          <span class="mob-card-valor ${valClass}">${valor > 0 ? fmt(valor) : '—'}</span>
+        </div>
+      </div>`;
+  }).join('');
 }
 
 function statusDateCell(date, overdue) {
